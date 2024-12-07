@@ -1,0 +1,15 @@
+*.iml
+/local.properties
+/.idea/*
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+/app/google-services.json
+*idea*
+*local.properties*
+/app/gradlew*
+/.gradle/file-system.probe
+.gradle/*.*
+.gradle/**
