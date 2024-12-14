@@ -3,12 +3,16 @@ package com.nicholssoftware.jonslearningappandroid.ui.login.sign_in
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
+import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.stringutil.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor() : ViewModel() {
+class SignInViewModel @Inject constructor() : BaseViewModel() {
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
 
@@ -41,12 +45,12 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     }
 
     fun createAccount(){
-
+        updateNavigationEvent(NavigationConstants.SIGNUP)
     }
 
     fun signIn(){
         if(signInEnabled.value){
-            //TODO validate credentials and go to dashboard
+            updateNavigationEvent(NavigationConstants.DASHBOARD)
         }
     }
 

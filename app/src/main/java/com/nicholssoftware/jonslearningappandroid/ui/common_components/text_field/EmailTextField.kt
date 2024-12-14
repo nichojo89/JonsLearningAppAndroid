@@ -1,6 +1,5 @@
 package com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.font.FontAwesomeIcon
@@ -14,6 +13,7 @@ fun EmailTextField(
     errorMessage: String = ""
 ) {
     CustomTextField(
+        onDone = signIn,
         value = email,
         label = "Username",
         errorMessage = errorMessage,

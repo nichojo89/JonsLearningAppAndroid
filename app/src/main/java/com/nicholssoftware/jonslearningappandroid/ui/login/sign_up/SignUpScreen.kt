@@ -1,11 +1,20 @@
-package com.nicholssoftware.jonslearningappandroid.ui.login.sign_in
+package com.nicholssoftware.jonslearningappandroid.ui.login.sign_up
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,14 +43,13 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.CustomTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.EmailTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.PasswordTextField
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun SignInScreen(
+fun SignUpScreen(
     resetNavigation: () -> Unit = {},
     navigationEvent: StateFlow<String?>,
     navController: NavController,
@@ -50,9 +57,7 @@ fun SignInScreen(
     passwordFlow : State<String>,
     updateUsername: (String) -> Unit = {},
     updatePassword: (String) -> Unit = {},
-    sendForgotPassword: () -> Unit = {},
     signInWithGoogle: () -> Unit = {},
-    createAccount: () -> Unit = {},
     validateCredentials: () -> Unit = {},
     signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
@@ -100,7 +105,7 @@ fun SignInScreen(
                     .padding(horizontal = 16.dp)
                     .fillMaxSize()
             ) {
-                Text("Welcome Back",
+                Text("Get Started",
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = (height.value * 0.1).dp),
@@ -110,7 +115,7 @@ fun SignInScreen(
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Text("Enter your details below",
+                Text("Create your free account",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = TextStyle(
                         color = Color.Gray,
@@ -139,15 +144,16 @@ fun SignInScreen(
                     onPasswordChange = onPasswordUpdate,
                     onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
-
-                Text(text = "Forgot password",
-                    color = Color(0xFFAD3689),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
+                PasswordTextField(
+                    label = "Confirm password",
+                    signIn = signIn,
                     modifier = Modifier
-                        .clickable {
-                            sendForgotPassword.invoke()
-                        }
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    password = passwordFlow.value,
+                    hidePassword = hidePassword.value,
+                    onPasswordChange = onPasswordUpdate,
+                    onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
                 Box(modifier = Modifier.height(20.dp)) {
@@ -158,7 +164,7 @@ fun SignInScreen(
                         .background(Color.Gray)
                         .height(1.dp)
                         .fillMaxWidth())
-                    Text("or sign up with",
+                    Text("or sign in with",
                         modifier = Modifier
                             .zIndex(2f)
                             .align(Alignment.Center)
@@ -191,9 +197,9 @@ fun SignInScreen(
                 Row(modifier = Modifier
                     .padding(vertical = 16.dp)
                     .align(Alignment.CenterHorizontally)){
-                    Text("Need an account?",
+                    Text("Already have an account?",
                         textAlign = TextAlign.Center)
-                    Text("Create  Account",
+                    Text("Sign in",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -201,7 +207,7 @@ fun SignInScreen(
                         modifier = Modifier
                             .padding(start = 6.dp)
                             .clickable {
-                                createAccount.invoke()
+                                navController.popBackStack()
                             })
                 }
                 Button(
@@ -218,9 +224,9 @@ fun SignInScreen(
                         contentColor = Color.White,
                         disabledContainerColor = Color(0x80AD3689),
                         disabledContentColor = Color.White),
-                    )
+                )
                 {
-                    Text("Sign in")
+                    Text("Sign up")
                 }
             }
         }
@@ -239,17 +245,14 @@ fun SignInScreenPreview() {
     }
     val navController = rememberNavController()
 
-    SignInScreen(
-        resetNavigation = {},
+    SignUpScreen(
         navigationEvent = navigationEvent,
         navController = navController,
         usernameFlow = usernameState,
         passwordFlow = passwordState,
         updateUsername = { usernameState.value = it },
         updatePassword = { passwordState.value = it },
-        sendForgotPassword = {},
         signInWithGoogle = {},
-        createAccount = {},
         validateCredentials = {},
         signInEnabled = signInEnabledState,
         usernameErrorMessage = usernameErrorMessageState
