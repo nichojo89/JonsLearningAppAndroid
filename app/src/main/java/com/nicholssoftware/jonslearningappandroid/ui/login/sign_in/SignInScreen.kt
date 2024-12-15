@@ -139,6 +139,7 @@ fun SignInScreen(
                     password = passwordFlow.value,
                     hidePassword = hidePassword.value,
                     onPasswordChange = onPasswordUpdate,
+                    errorMessage = passwordErrorMessage.value,
                     onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
 

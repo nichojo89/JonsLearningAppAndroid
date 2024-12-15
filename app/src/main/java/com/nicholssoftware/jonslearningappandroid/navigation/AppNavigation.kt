@@ -59,7 +59,8 @@ fun AppNavigation(
                 signUp = signUpViewModel::signUp,
                 confirmPasswordFlow = signUpViewModel.confirmPasswordFlow,
                 updateConfirmPasswordFlow = signUpViewModel::updateConfirmPassword,
-                isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile
+                isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile,
+                passwordErrorMessage = signUpViewModel.usernameErrorMessage
             )
         }
         composable(NavigationConstants.EMAIL_VERIFICATION) {

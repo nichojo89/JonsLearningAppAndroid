@@ -14,7 +14,8 @@ fun PasswordTextField(
     password: String,
     onPasswordChange: (String) -> Unit,
     onTrailingIconClick: () -> Unit,
-    hidePassword: Boolean
+    hidePassword: Boolean,
+    errorMessage: String
 ) {
     val trailingIcon =
         if (hidePassword) FontAwesomeIcon.EYESLASH
@@ -28,6 +29,7 @@ fun PasswordTextField(
         onDone = signIn,
         modifier = modifier,
         value = password,
+        errorMessage = errorMessage,
         onValueChange = onPasswordChange,
         leadingIcon = FontAwesomeIcon.LOCK.unicode,
         trailingIcon = trailingIcon.unicode,
