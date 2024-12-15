@@ -2,6 +2,9 @@ package com.nicholssoftware.jonslearningappandroid.ui.login.sign_in
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.GoogleAuthProvider
+import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.stringutil.isValidEmail
@@ -10,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor() : BaseViewModel() {
+
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
 
@@ -21,6 +25,9 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
 
     private val _usernameErrorMessage = mutableStateOf("")
     val usernameErrorMessage : State<String> = _usernameErrorMessage
+
+    private val _passwordErrorMessage = mutableStateOf("")
+    val passwordErrorMessage : State<String> = _passwordErrorMessage
 
     fun updateUsername(username: String){
         _usernameFlow.value = username
@@ -37,17 +44,22 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
 
     }
 
-    fun signInWithGoogle(){
-
-    }
-
     fun createAccount(){
         updateNavigationEvent(NavigationConstants.SIGNUP)
     }
 
     fun signIn(){
         if(signInEnabled.value){
-            updateNavigationEvent(NavigationConstants.DASHBOARD)
+            //This is were user signs in using google
+        }
+    }
+    fun signInWithGoogle(account: GoogleSignInAccount) {
+        FirebaseAuthenticator.signInWithGoogle(account){success ->
+            if (success) {
+                updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
+            } else {
+                _passwordErrorMessage.value = "Google sign-in failed"
+            }
         }
     }
 

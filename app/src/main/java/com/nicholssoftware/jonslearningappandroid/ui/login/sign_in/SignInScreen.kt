@@ -56,6 +56,7 @@ fun SignInScreen(
     validateCredentials: () -> Unit = {},
     signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
+    passwordErrorMessage: State<String>,
     signIn: () -> Unit = {}
 ) {
     val onUsernameUpdate: (String) -> Unit = {
@@ -235,6 +236,7 @@ fun SignInScreenPreview() {
     val passwordState = remember { mutableStateOf("Password123") }
     val signInEnabledState = remember { mutableStateOf(true) }
     val usernameErrorMessageState = remember { mutableStateOf("") }
+    val passwordErrorMessageState = remember { mutableStateOf("") }
     val navigationEvent = remember {
         MutableStateFlow("")
     }
@@ -253,6 +255,7 @@ fun SignInScreenPreview() {
         createAccount = {},
         validateCredentials = {},
         signInEnabled = signInEnabledState,
-        usernameErrorMessage = usernameErrorMessageState
+        usernameErrorMessage = usernameErrorMessageState,
+        passwordErrorMessage = passwordErrorMessageState
     )
 }

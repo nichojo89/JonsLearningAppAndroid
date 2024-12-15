@@ -63,7 +63,7 @@ fun SignUpScreen(
     validateCredentials: () -> Unit = {},
     signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
-    signIn: () -> Unit = {},
+    signUp: () -> Unit = {},
     isConfirmPasswordVisible : State<Boolean>
 ) {
     val onUsernameUpdate: (String) -> Unit = {
@@ -134,7 +134,7 @@ fun SignUpScreen(
 
                 EmailTextField(
                     label = "Username",
-                    signIn = signIn,
+                    signIn = signUp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
@@ -144,7 +144,7 @@ fun SignUpScreen(
 
                 PasswordTextField(
                     label = "Password",
-                    signIn = signIn,
+                    signIn = signUp,
                     modifier = Modifier
                         .fillMaxWidth(),
                     password = passwordFlow.value,
@@ -155,7 +155,7 @@ fun SignUpScreen(
                 if(isConfirmPasswordVisible.value){
                     PasswordTextField(
                         label = "Confirm password",
-                        signIn = signIn,
+                        signIn = signUp,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 12.dp)
@@ -225,7 +225,7 @@ fun SignUpScreen(
                 Button(
                     enabled = signInEnabled.value,
                     onClick = {
-                        navController.navigate("dashboard")
+                        signUp()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -268,7 +268,7 @@ fun SignInScreenPreview() {
         validateCredentials = {},
         signInEnabled = signInEnabledState,
         usernameErrorMessage = usernameErrorMessageState,
-        signIn = {},
+        signUp = {},
         confirmPasswordFlow = confirmPasswordState,
         resetNavigation = {},
         updateConfirmPasswordFlow = {},
