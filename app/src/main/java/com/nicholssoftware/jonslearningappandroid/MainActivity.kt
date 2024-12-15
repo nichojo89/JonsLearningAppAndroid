@@ -15,8 +15,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.nicholssoftware.jonslearningappandroid.navigation.AppNavigation
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.dashboard.DashboardScreen
+import com.nicholssoftware.jonslearningappandroid.ui.login.email_verification.EmailVerificationScreen
+import com.nicholssoftware.jonslearningappandroid.ui.login.email_verification.EmailVerificationViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_in.SignInScreen
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_in.SignInViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpScreen
@@ -27,6 +30,7 @@ class MainActivity : ComponentActivity() {
     val isLoggedIn = false
     private val signInViewModel: SignInViewModel by viewModels()
     private val signUpViewModel: SignUpViewModel by viewModels()
+    private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var navController : NavHostController
 
@@ -43,51 +47,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             navController = rememberNavController()
             JonsLearningAppAndroidTheme {
-                val startScreen = if(isLoggedIn) "dashboard" else "signin"
-                NavHost(navController = navController, startDestination = startScreen) {
-                    composable(NavigationConstants.SIGNIN) {
-                        SignInScreen(
-                            resetNavigation = signInViewModel::resetNavigation,
-                            navigationEvent = signInViewModel.navigationEvent,
-                            navController = navController,
-                            usernameFlow = signInViewModel.usernameFlow,
-                            passwordFlow = signInViewModel.passwordFlow,
-                            updateUsername = signInViewModel::updateUsername,
-                            updatePassword = signInViewModel::updatePassword,
-                            sendForgotPassword = signInViewModel::sendForgotPassword,
-                            signInWithGoogle = {signInWithGoogle()},
-                            createAccount = signInViewModel::createAccount,
-                            validateCredentials = signInViewModel::validateCredentials,
-                            usernameErrorMessage = signInViewModel.usernameErrorMessage,
-                            signInEnabled = signInViewModel.signInEnabled,
-                            signIn = signInViewModel::signIn,
-                            passwordErrorMessage = signInViewModel.usernameErrorMessage
-                        )
-                    }
-                    composable(NavigationConstants.SIGNUP){
-                        SignUpScreen(
-                            resetNavigation = signUpViewModel::resetNavigation,
-                            navigationEvent = signUpViewModel.navigationEvent,
-                            navController = navController,
-                            usernameFlow = signUpViewModel.usernameFlow,
-                            passwordFlow = signUpViewModel.passwordFlow,
-                            updateUsername = signUpViewModel::updateUsername,
-                            updatePassword = signUpViewModel::updatePassword,
-                            signUpWithGoogle = {signInWithGoogle()},
-                            validateCredentials = signUpViewModel::validateCredentials,
-                            usernameErrorMessage = signUpViewModel.usernameErrorMessage,
-                            signInEnabled = signUpViewModel.signUpEnabled,
-                            signUp = signUpViewModel::signUp,
-                            confirmPasswordFlow = signUpViewModel.confirmPasswordFlow,
-                            updateConfirmPasswordFlow = signUpViewModel::updateConfirmPassword,
-                            isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile
-                        )
-                    }
-
-                    composable(NavigationConstants.DASHBOARD) {
-                        DashboardScreen()
-                    }
-                }
+                AppNavigation(
+                    navController = navController,
+                    isLoggedIn = isLoggedIn,
+                    signInViewModel = signInViewModel,
+                    signUpViewModel = signUpViewModel,
+                    emailVerificationViewModel = emailVerificationViewModel,
+                    signInWithGoogle = { signInWithGoogle() }
+                )
             }
         }
     }
@@ -111,7 +78,7 @@ class MainActivity : ComponentActivity() {
             account?.let {
                 navController.currentDestination?.route.toString().let { route ->
                     when(route){
-                        NavigationConstants.SIGNIN -> signInViewModel.signInWithGoogle(account)
+                        NavigationConstants.SIGN_IN -> signInViewModel.signInWithGoogle(account)
                         else -> signUpViewModel.signUpWithGoogle(account)
                     }
                 }

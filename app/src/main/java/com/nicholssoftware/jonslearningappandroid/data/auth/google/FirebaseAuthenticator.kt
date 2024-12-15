@@ -56,4 +56,13 @@ object FirebaseAuthenticator {
             completion(task.isSuccessful)
         }
     }
+
+    fun sendEmailVerification(completion: (Boolean) -> Unit) {
+        user?.let {
+            it.sendEmailVerification()
+                .addOnCompleteListener { task ->
+                    completion(task.isSuccessful)
+                }
+        }
+    }
 }
