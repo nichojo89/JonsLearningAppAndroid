@@ -6,6 +6,7 @@ import com.nicholssoftware.jonslearningappandroid.ui.common_components.font.Font
 
 @Composable
 fun EmailTextField(
+    label: String,
     signIn : () -> Unit,
     modifier: Modifier,
     email: String,
@@ -15,7 +16,7 @@ fun EmailTextField(
     CustomTextField(
         onDone = signIn,
         value = email,
-        label = "Username",
+        label = label,
         errorMessage = errorMessage,
         onValueChange = onEmailChange,
         modifier = modifier,

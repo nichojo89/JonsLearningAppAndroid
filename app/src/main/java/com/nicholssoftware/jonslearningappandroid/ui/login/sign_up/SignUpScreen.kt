@@ -55,13 +55,16 @@ fun SignUpScreen(
     navController: NavController,
     usernameFlow : State<String>,
     passwordFlow : State<String>,
+    confirmPasswordFlow : State<String>,
+    updateConfirmPasswordFlow: (String) -> Unit,
     updateUsername: (String) -> Unit = {},
     updatePassword: (String) -> Unit = {},
-    signInWithGoogle: () -> Unit = {},
+    signUpWithGoogle: () -> Unit = {},
     validateCredentials: () -> Unit = {},
     signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
-    signIn: () -> Unit = {}
+    signIn: () -> Unit = {},
+    isConfirmPasswordVisible : State<Boolean>
 ) {
     val onUsernameUpdate: (String) -> Unit = {
         updateUsername.invoke(it)
@@ -71,9 +74,14 @@ fun SignUpScreen(
         updatePassword.invoke(it)
         validateCredentials()
     }
+    val onConfirmPasswordUpdate: (String) -> Unit = {
+        updateConfirmPasswordFlow.invoke(it)
+        validateCredentials()
+    }
     val hidePassword = remember {
         mutableStateOf(true)
     }
+
     val navEvent = navigationEvent.collectAsState()
     LaunchedEffect(key1 = navEvent.value) {
         navigationEvent.value?.let {destination ->
@@ -125,10 +133,11 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
 
                 EmailTextField(
+                    label = "Username",
                     signIn = signIn,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .padding(top = 12.dp),
                     email = usernameFlow.value,
                     onEmailChange = onUsernameUpdate,
                     errorMessage = usernameErrorMessage.value)
@@ -137,24 +146,27 @@ fun SignUpScreen(
                     label = "Password",
                     signIn = signIn,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .fillMaxWidth(),
                     password = passwordFlow.value,
                     hidePassword = hidePassword.value,
                     onPasswordChange = onPasswordUpdate,
                     onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
-                PasswordTextField(
-                    label = "Confirm password",
-                    signIn = signIn,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    password = passwordFlow.value,
-                    hidePassword = hidePassword.value,
-                    onPasswordChange = onPasswordUpdate,
-                    onTrailingIconClick = { hidePassword.value = !hidePassword.value }
-                )
+                if(isConfirmPasswordVisible.value){
+                    PasswordTextField(
+                        label = "Confirm password",
+                        signIn = signIn,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 12.dp)
+                        ,
+                        password = confirmPasswordFlow.value,
+                        hidePassword = hidePassword.value,
+                        onPasswordChange = onConfirmPasswordUpdate,
+                        onTrailingIconClick = { hidePassword.value = !hidePassword.value }
+                    )
+                }
+
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
                 Box(modifier = Modifier.height(20.dp)) {
                     Box(modifier = Modifier
@@ -181,7 +193,7 @@ fun SignUpScreen(
                     )
                     .fillMaxWidth()
                     .clickable {
-                        signInWithGoogle.invoke()
+                        signUpWithGoogle.invoke()
                     }
                 ) {
                     Image(
@@ -238,11 +250,11 @@ fun SignUpScreen(
 fun SignInScreenPreview() {
     val usernameState = remember { mutableStateOf("TestUser") }
     val passwordState = remember { mutableStateOf("Password123") }
+    val confirmPasswordState = remember { mutableStateOf("Password123") }
     val signInEnabledState = remember { mutableStateOf(true) }
     val usernameErrorMessageState = remember { mutableStateOf("") }
-    val navigationEvent = remember {
-        MutableStateFlow("")
-    }
+    val navigationEvent = remember { MutableStateFlow("") }
+    val isConfirmPasswordVisible = remember{ mutableStateOf(true) }
     val navController = rememberNavController()
 
     SignUpScreen(
@@ -252,9 +264,14 @@ fun SignInScreenPreview() {
         passwordFlow = passwordState,
         updateUsername = { usernameState.value = it },
         updatePassword = { passwordState.value = it },
-        signInWithGoogle = {},
+        signUpWithGoogle = {},
         validateCredentials = {},
         signInEnabled = signInEnabledState,
-        usernameErrorMessage = usernameErrorMessageState
+        usernameErrorMessage = usernameErrorMessageState,
+        signIn = {},
+        confirmPasswordFlow = confirmPasswordState,
+        resetNavigation = {},
+        updateConfirmPasswordFlow = {},
+        isConfirmPasswordVisible = isConfirmPasswordVisible
     )
 }

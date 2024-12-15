@@ -120,10 +120,11 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
 
                 EmailTextField(
+                    label = "Username",
                     signIn = signIn,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .padding(top = 12.dp),
                     email = usernameFlow.value,
                     onEmailChange = onUsernameUpdate,
                     errorMessage = usernameErrorMessage.value)
@@ -133,7 +134,7 @@ fun SignInScreen(
                     signIn = signIn,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .padding(bottom = 12.dp),
                     password = passwordFlow.value,
                     hidePassword = hidePassword.value,
                     onPasswordChange = onPasswordUpdate,
