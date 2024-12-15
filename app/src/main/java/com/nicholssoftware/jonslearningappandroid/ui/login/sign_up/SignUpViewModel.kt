@@ -61,17 +61,17 @@ class SignUpViewModel @Inject constructor() : BaseViewModel() {
     fun signUp() {
         updateSignUpEnabled(false)
         if(_passwordFlow.value.isNotEmpty() && _passwordFlow.value == _confirmPasswordFlow.value){
-            FirebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success ->
+            FirebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success, error ->
                 if(success){
                     updateNavigationEvent(NavigationConstants.DASHBOARD)
                 } else {
-                    _passwordErrorMessage.value = "Invalid username/password"
+                    _passwordErrorMessage.value = error.toString()
                 }
+                updateSignUpEnabled(true)
             }
         } else {
             _passwordErrorMessage.value = "Passwords do not match"
         }
-        updateSignUpEnabled(true)
     }
 
     fun validateCredentials(){

@@ -7,10 +7,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.FirebaseAuthWebException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
+import java.lang.Exception
 
 object FirebaseAuthenticator {
     private var auth: FirebaseAuth
@@ -23,31 +28,43 @@ object FirebaseAuthenticator {
         auth = Firebase.auth
     }
 
-    fun signUp(email: String, password: String, completion: (Boolean) -> Unit){
+    fun signUp(email: String, password: String, completion: (Boolean, String?) -> Unit){
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(tag, "createUserWithEmail:success")
                     user = auth.currentUser
+                    completion(task.isSuccessful, null)
                 } else {
-                    Log.w(tag, "createUserWithEmail:failure", task.exception)
+                    val errorMessage = task.exception?.let {
+                        extractSignInErrorMessage(it)
+                    }
+                    completion(task.isSuccessful, errorMessage)
                 }
-                completion(task.isSuccessful)
             }
     }
 
-    fun signIn(email: String, password: String, completion: (Boolean) -> Unit) {
+    fun signIn(email: String, password: String, completion: (Boolean, String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(tag, "signInWithEmail:success")
                     user = auth.currentUser
+                    completion(task.isSuccessful, null)
                 } else {
-                    Log.w(tag, "signInWithEmail:failure", task.exception)
+                    val errorMessage = task.exception?.let {
+                        extractSignInErrorMessage(it)
+                    }
+                    completion(task.isSuccessful, errorMessage)
                 }
-                completion(task.isSuccessful)
             }
+    }
+
+    fun extractSignInErrorMessage(exception: Exception) : String {
+        return when (exception) {
+            is FirebaseAuthWeakPasswordException -> "Weak password"
+            is FirebaseAuthInvalidUserException -> "Account not found"
+            is FirebaseAuthInvalidCredentialsException -> "Invalid credentials"
+            else -> "Unknown error"
+        }
     }
 
     fun signInWithGoogle(account: GoogleSignInAccount, completion: (Boolean) -> Unit) {

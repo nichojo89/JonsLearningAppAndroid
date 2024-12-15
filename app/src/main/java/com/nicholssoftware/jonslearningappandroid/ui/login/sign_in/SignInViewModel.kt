@@ -36,7 +36,11 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
         _passwordFlow.value = password
     }
 
-    private fun updateSignInEnabled(value: Boolean) {
+    fun updatePasswordErrorMessage(error: String){
+        _passwordErrorMessage.value = error
+    }
+
+    fun updateSignInEnabled(value: Boolean) {
         _signInEnabled.value = value
     }
 
@@ -50,7 +54,17 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
 
     fun signIn(){
         if(signInEnabled.value){
-            //This is were user signs in using google
+            updateSignInEnabled(false)
+            FirebaseAuthenticator.signIn(usernameFlow.value, passwordFlow.value){ success, error ->
+                if(success){
+                    updateNavigationEvent(NavigationConstants.DASHBOARD)
+                } else {
+                    error?.let {
+                        updatePasswordErrorMessage(it)
+                    }
+                }
+                validateCredentials()
+            }
         }
     }
     fun signInWithGoogle(account: GoogleSignInAccount) {

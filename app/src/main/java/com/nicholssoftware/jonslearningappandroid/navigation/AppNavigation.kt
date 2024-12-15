@@ -40,7 +40,8 @@ fun AppNavigation(
                 usernameErrorMessage = signInViewModel.usernameErrorMessage,
                 signInEnabled = signInViewModel.signInEnabled,
                 signIn = signInViewModel::signIn,
-                passwordErrorMessage = signInViewModel.usernameErrorMessage
+                passwordErrorMessage = signInViewModel.passwordErrorMessage,
+                updateSignInEnabled = signInViewModel::updateSignInEnabled
             )
         }
         composable(NavigationConstants.SIGNUP) {
@@ -60,7 +61,7 @@ fun AppNavigation(
                 confirmPasswordFlow = signUpViewModel.confirmPasswordFlow,
                 updateConfirmPasswordFlow = signUpViewModel::updateConfirmPassword,
                 isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile,
-                passwordErrorMessage = signUpViewModel.usernameErrorMessage
+                passwordErrorMessage = signUpViewModel.passwordErrorMessage
             )
         }
         composable(NavigationConstants.EMAIL_VERIFICATION) {

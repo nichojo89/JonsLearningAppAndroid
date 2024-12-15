@@ -35,6 +35,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nicholssoftware.jonslearningappandroid.R
+import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.CustomTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.EmailTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.PasswordTextField
@@ -57,7 +58,8 @@ fun SignInScreen(
     signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
     passwordErrorMessage: State<String>,
-    signIn: () -> Unit = {}
+    signIn: () -> Unit = {},
+    updateSignInEnabled: (Boolean) -> Unit ={}
 ) {
     val onUsernameUpdate: (String) -> Unit = {
         updateUsername.invoke(it)
@@ -210,7 +212,7 @@ fun SignInScreen(
                 Button(
                     enabled = signInEnabled.value,
                     onClick = {
-                        navController.navigate("dashboard")
+                        signIn()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
