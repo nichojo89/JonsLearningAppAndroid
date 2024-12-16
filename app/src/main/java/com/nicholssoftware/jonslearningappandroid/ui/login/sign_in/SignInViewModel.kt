@@ -2,6 +2,7 @@ package com.nicholssoftware.jonslearningappandroid.ui.login.sign_in
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.GoogleAuthProvider
 import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
@@ -13,7 +14,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor() : BaseViewModel() {
-
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
 
@@ -67,12 +67,17 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
             }
         }
     }
-    fun signInWithGoogle(account: GoogleSignInAccount) {
-        FirebaseAuthenticator.signInWithGoogle(account){success ->
-            if (success) {
-                updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
-            } else {
-                _passwordErrorMessage.value = "Google sign-in failed"
+
+    fun signInWithGoogle(account: GoogleSignInAccount, navController: NavController) {
+        navController.currentDestination?.route.toString().let { route ->
+            if(route == NavigationConstants.SIGN_IN){
+                FirebaseAuthenticator.signInWithGoogle(account){success ->
+                    if (success) {
+                        updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
+                    } else {
+                        _passwordErrorMessage.value = "Google sign-in failed"
+                    }
+                }
             }
         }
     }

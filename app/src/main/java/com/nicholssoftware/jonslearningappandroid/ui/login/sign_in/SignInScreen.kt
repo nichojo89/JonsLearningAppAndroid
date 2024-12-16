@@ -26,7 +26,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,9 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
-import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.CustomTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.EmailTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.PasswordTextField
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,23 +42,30 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SignInScreen(
+    signIn: () -> Unit = {},
+    usernameFlow: State<String>,
+    passwordFlow: State<String>,
+    navController: NavController,
+    signInEnabled: State<Boolean>,
+    createAccount: () -> Unit = {},
     resetNavigation: () -> Unit = {},
     navigationEvent: StateFlow<String?>,
-    navController: NavController,
-    usernameFlow : State<String>,
-    passwordFlow : State<String>,
-    updateUsername: (String) -> Unit = {},
-    updatePassword: (String) -> Unit = {},
     sendForgotPassword: () -> Unit = {},
-    signInWithGoogle: () -> Unit = {},
-    createAccount: () -> Unit = {},
-    validateCredentials: () -> Unit = {},
-    signInEnabled: State<Boolean>,
     usernameErrorMessage: State<String>,
     passwordErrorMessage: State<String>,
-    signIn: () -> Unit = {},
-    updateSignInEnabled: (Boolean) -> Unit ={}
+    validateCredentials: () -> Unit = {},
+    updateUsername: (String) -> Unit = {},
+    updatePassword: (String) -> Unit = {},
+    requestSignInWithGoogle: () -> Unit = {},
+    signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit,
+    signInWithGoogle: (account: GoogleSignInAccount, navController: NavController) -> Unit = { _: GoogleSignInAccount, _: NavController -> }
 ) {
+    val googleSignIn: (GoogleSignInAccount) -> Unit = {
+        signInWithGoogle(it, navController)
+    }
+
+    signIntoGoogle(googleSignIn)
+
     val onUsernameUpdate: (String) -> Unit = {
         updateUsername.invoke(it)
         validateCredentials()
@@ -73,12 +78,14 @@ fun SignInScreen(
         mutableStateOf(true)
     }
     val navEvent = navigationEvent.collectAsState()
+
     LaunchedEffect(key1 = navEvent.value) {
-        navigationEvent.value?.let {destination ->
+        navigationEvent.value?.let { destination ->
             navController.navigate(destination)
             resetNavigation.invoke()
         }
     }
+
     BoxWithConstraints {
         val height = maxHeight
         Image(
@@ -88,10 +95,11 @@ fun SignInScreen(
             painter = painterResource(id = R.drawable.sign_in_bg)
         )
 
-        Card(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 32.dp)
-            .clip(RoundedCornerShape(16.dp)),
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp)
+                .clip(RoundedCornerShape(16.dp)),
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White,
@@ -103,7 +111,8 @@ fun SignInScreen(
                     .padding(horizontal = 16.dp)
                     .fillMaxSize()
             ) {
-                Text("Welcome Back",
+                Text(
+                    "Welcome Back",
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = (height.value * 0.1).dp),
@@ -113,7 +122,8 @@ fun SignInScreen(
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Text("Enter your details below",
+                Text(
+                    "Enter your details below",
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = TextStyle(
                         color = Color.Gray,
@@ -130,7 +140,8 @@ fun SignInScreen(
                         .padding(top = 12.dp),
                     email = usernameFlow.value,
                     onEmailChange = onUsernameUpdate,
-                    errorMessage = usernameErrorMessage.value)
+                    errorMessage = usernameErrorMessage.value
+                )
 
                 PasswordTextField(
                     label = "Password",
@@ -156,21 +167,25 @@ fun SignInScreen(
                 )
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
                 Box(modifier = Modifier.height(20.dp)) {
-                    Box(modifier = Modifier
-                        .zIndex(1f)
-                        .padding(top = 3.dp)
-                        .align(Alignment.Center)
-                        .background(Color.Gray)
-                        .height(1.dp)
-                        .fillMaxWidth())
-                    Text("or sign up with",
+                    Box(
+                        modifier = Modifier
+                            .zIndex(1f)
+                            .padding(top = 3.dp)
+                            .align(Alignment.Center)
+                            .background(Color.Gray)
+                            .height(1.dp)
+                            .fillMaxWidth()
+                    )
+                    Text(
+                        "or sign up with",
                         modifier = Modifier
                             .zIndex(2f)
                             .align(Alignment.Center)
                             .background(Color.White)
                             .padding(horizontal = 12.dp),
                         fontSize = 16.sp,
-                        color = Color.Gray)
+                        color = Color.Gray
+                    )
                 }
                 Box(modifier = Modifier
                     .padding(top = 16.dp)
@@ -180,7 +195,7 @@ fun SignInScreen(
                     )
                     .fillMaxWidth()
                     .clickable {
-                        signInWithGoogle.invoke()
+                        requestSignInWithGoogle.invoke()
                     }
                 ) {
                     Image(
@@ -193,11 +208,15 @@ fun SignInScreen(
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Row(modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .align(Alignment.CenterHorizontally)){
-                    Text("Need an account?",
-                        textAlign = TextAlign.Center)
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    Text(
+                        "Need an account?",
+                        textAlign = TextAlign.Center
+                    )
                     Text("Create  Account",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
@@ -222,8 +241,9 @@ fun SignInScreen(
                         containerColor = Color(0xFFAD3689),
                         contentColor = Color.White,
                         disabledContainerColor = Color(0x80AD3689),
-                        disabledContentColor = Color.White),
-                    )
+                        disabledContentColor = Color.White
+                    ),
+                )
                 {
                     Text("Sign in")
                 }
@@ -235,30 +255,31 @@ fun SignInScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignInScreenPreview() {
+    val navController = rememberNavController()
+    val signInEnabledState = remember { mutableStateOf(true) }
     val usernameState = remember { mutableStateOf("TestUser") }
     val passwordState = remember { mutableStateOf("Password123") }
-    val signInEnabledState = remember { mutableStateOf(true) }
     val usernameErrorMessageState = remember { mutableStateOf("") }
     val passwordErrorMessageState = remember { mutableStateOf("") }
     val navigationEvent = remember {
         MutableStateFlow("")
     }
-    val navController = rememberNavController()
 
     SignInScreen(
+        createAccount = {},
+        signIntoGoogle = {},
         resetNavigation = {},
-        navigationEvent = navigationEvent,
-        navController = navController,
+        sendForgotPassword = {},
+        validateCredentials = {},
         usernameFlow = usernameState,
         passwordFlow = passwordState,
+        navController = navController,
+        navigationEvent = navigationEvent,
+        signInEnabled = signInEnabledState,
         updateUsername = { usernameState.value = it },
         updatePassword = { passwordState.value = it },
-        sendForgotPassword = {},
-        signInWithGoogle = {},
-        createAccount = {},
-        validateCredentials = {},
-        signInEnabled = signInEnabledState,
         usernameErrorMessage = usernameErrorMessageState,
-        passwordErrorMessage = passwordErrorMessageState
+        passwordErrorMessage = passwordErrorMessageState,
+        signInWithGoogle = { googleSignInAccount: GoogleSignInAccount, navController: NavController -> }
     )
 }

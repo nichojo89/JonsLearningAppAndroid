@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.ui.dashboard.DashboardScreen
 import com.nicholssoftware.jonslearningappandroid.ui.login.email_verification.EmailVerificationScreen
 import com.nicholssoftware.jonslearningappandroid.ui.login.email_verification.EmailVerificationViewModel
@@ -14,54 +15,57 @@ import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpViewMod
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController,
     isLoggedIn: Boolean,
+    navController: NavHostController,
     signInViewModel: SignInViewModel,
     signUpViewModel: SignUpViewModel,
+    requestSignInWithGoogle: () -> Unit,
     emailVerificationViewModel: EmailVerificationViewModel,
-    signInWithGoogle: () -> Unit
+    signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
 ) {
     val startScreen = if (isLoggedIn) NavigationConstants.DASHBOARD else NavigationConstants.SIGN_IN
-
     NavHost(navController = navController, startDestination = startScreen) {
         composable(NavigationConstants.SIGN_IN) {
             SignInScreen(
-                resetNavigation = signInViewModel::resetNavigation,
-                navigationEvent = signInViewModel.navigationEvent,
                 navController = navController,
+                signIntoGoogle = signIntoGoogle,
+                signIn = signInViewModel::signIn,
                 usernameFlow = signInViewModel.usernameFlow,
                 passwordFlow = signInViewModel.passwordFlow,
+                signInEnabled = signInViewModel.signInEnabled,
+                createAccount = signInViewModel::createAccount,
                 updateUsername = signInViewModel::updateUsername,
                 updatePassword = signInViewModel::updatePassword,
+                navigationEvent = signInViewModel.navigationEvent,
+                resetNavigation = signInViewModel::resetNavigation,
+                signInWithGoogle = signInViewModel::signInWithGoogle,
+                requestSignInWithGoogle = { requestSignInWithGoogle() },
                 sendForgotPassword = signInViewModel::sendForgotPassword,
-                signInWithGoogle = { signInWithGoogle() },
-                createAccount = signInViewModel::createAccount,
                 validateCredentials = signInViewModel::validateCredentials,
-                usernameErrorMessage = signInViewModel.usernameErrorMessage,
-                signInEnabled = signInViewModel.signInEnabled,
-                signIn = signInViewModel::signIn,
                 passwordErrorMessage = signInViewModel.passwordErrorMessage,
-                updateSignInEnabled = signInViewModel::updateSignInEnabled
+                usernameErrorMessage = signInViewModel.usernameErrorMessage
             )
         }
         composable(NavigationConstants.SIGNUP) {
             SignUpScreen(
-                resetNavigation = signUpViewModel::resetNavigation,
-                navigationEvent = signUpViewModel.navigationEvent,
                 navController = navController,
+                signIntoGoogle = signIntoGoogle,
+                signUp = signUpViewModel::signUp,
                 usernameFlow = signUpViewModel.usernameFlow,
                 passwordFlow = signUpViewModel.passwordFlow,
+                signInEnabled = signUpViewModel.signUpEnabled,
                 updateUsername = signUpViewModel::updateUsername,
                 updatePassword = signUpViewModel::updatePassword,
-                signUpWithGoogle = { signInWithGoogle() },
+                navigationEvent = signUpViewModel.navigationEvent,
+                resetNavigation = signUpViewModel::resetNavigation,
+                signUpWithGoogle = signUpViewModel::signUpWithGoogle,
+                requestSignInWithGoogle = { requestSignInWithGoogle() },
+                confirmPasswordFlow = signUpViewModel.confirmPasswordFlow,
                 validateCredentials = signUpViewModel::validateCredentials,
                 usernameErrorMessage = signUpViewModel.usernameErrorMessage,
-                signInEnabled = signUpViewModel.signUpEnabled,
-                signUp = signUpViewModel::signUp,
-                confirmPasswordFlow = signUpViewModel.confirmPasswordFlow,
+                passwordErrorMessage = signUpViewModel.passwordErrorMessage,
                 updateConfirmPasswordFlow = signUpViewModel::updateConfirmPassword,
                 isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile,
-                passwordErrorMessage = signUpViewModel.passwordErrorMessage
             )
         }
         composable(NavigationConstants.EMAIL_VERIFICATION) {

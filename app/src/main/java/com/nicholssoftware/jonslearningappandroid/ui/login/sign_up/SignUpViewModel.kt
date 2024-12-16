@@ -2,6 +2,7 @@ package com.nicholssoftware.jonslearningappandroid.ui.login.sign_up
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
@@ -88,6 +89,20 @@ class SignUpViewModel @Inject constructor() : BaseViewModel() {
             updateSignUpEnabled(true)
         } else {
             updateSignUpEnabled(false)
+        }
+    }
+
+    fun signUpWithGoogle(account: GoogleSignInAccount, navController: NavController) {
+        navController.currentDestination?.route.toString().let { route ->
+            if(route == NavigationConstants.SIGNUP){
+                FirebaseAuthenticator.signInWithGoogle(account){success ->
+                    if (success) {
+                        updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
+                    } else {
+                        _passwordErrorMessage.value = "Google sign-up failed"
+                    }
+                }
+            }
         }
     }
 }
