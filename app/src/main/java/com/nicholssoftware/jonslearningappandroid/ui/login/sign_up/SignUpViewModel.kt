@@ -8,8 +8,10 @@ import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthe
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.stringutil.isValidEmail
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val firebaseAuthenticator: FirebaseAuthenticator
 ) : BaseViewModel() {
@@ -51,22 +53,12 @@ class SignUpViewModel @Inject constructor(
         _signUpEnabled.value = enabled
     }
 
-    fun signUpWithGoogle(account: GoogleSignInAccount) {
-        firebaseAuthenticator.signInWithGoogle(account){ success ->
-            if (success) {
-                updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
-            } else {
-                _passwordErrorMessage.value = "Google sign-in failed"
-            }
-        }
-    }
-
     fun signUp() {
         updateSignUpEnabled(false)
         if(_passwordFlow.value.isNotEmpty() && _passwordFlow.value == _confirmPasswordFlow.value){
             firebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success, error ->
                 if(success){
-                    updateNavigationEvent(NavigationConstants.DASHBOARD)
+                    updateNavigationEvent(NavigationConstants.EMAIL_VERIFICATION)
                 } else {
                     _passwordErrorMessage.value = error.toString()
                 }
@@ -99,7 +91,7 @@ class SignUpViewModel @Inject constructor(
             if(route == NavigationConstants.SIGNUP){
                 firebaseAuthenticator.signInWithGoogle(account){success ->
                     if (success) {
-                        updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
+                        updateNavigationEvent(NavigationConstants.DASHBOARD)
                     } else {
                         _passwordErrorMessage.value = "Google sign-up failed"
                     }

@@ -15,8 +15,10 @@ class EmailVerificationViewModel @Inject constructor(
     val isSendEmailEnabled: State<Boolean> = _isSendEmailEnabled
 
     fun sendVerificationEmail(){
+        _isSendEmailEnabled.value = false
         firebaseAuthenticator.sendEmailVerification {success ->
 //            completion(success)
+            _isSendEmailEnabled.value = true
         }
     }
 }

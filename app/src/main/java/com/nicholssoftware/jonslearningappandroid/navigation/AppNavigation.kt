@@ -71,6 +71,7 @@ fun AppNavigation(
         composable(NavigationConstants.EMAIL_VERIFICATION) {
             val emailVerificationViewModel : EmailVerificationViewModel = hiltViewModel()
             EmailVerificationScreen(
+                navController = navController,
                 isSendEmailEnabled = emailVerificationViewModel.isSendEmailEnabled,
                 sendVerificationEmail = emailVerificationViewModel::sendVerificationEmail
             )
