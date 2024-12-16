@@ -11,23 +11,12 @@ import javax.inject.Inject
 class EmailVerificationViewModel @Inject constructor(
     private val firebaseAuthenticator: FirebaseAuthenticator
 ) : ViewModel() {
-    private val _showDialog = mutableStateOf(false)
-    val showDialog : State<Boolean> = _showDialog
+    private val _isSendEmailEnabled = mutableStateOf(true)
+    val isSendEmailEnabled: State<Boolean> = _isSendEmailEnabled
 
-    private val _dialogMessage = mutableStateOf("")
-    val dialogMessage : State<String> = _dialogMessage
-
-    fun updateShowDialog(showDialog: Boolean){
-        _showDialog.value = showDialog
-    }
-
-    fun updateDialogMessage(message: String){
-        _dialogMessage.value = message
-    }
-
-    fun sendVerificationEmail(completion: (Boolean) -> Unit){
+    fun sendVerificationEmail(){
         firebaseAuthenticator.sendEmailVerification {success ->
-            completion(success)
+//            completion(success)
         }
     }
 }

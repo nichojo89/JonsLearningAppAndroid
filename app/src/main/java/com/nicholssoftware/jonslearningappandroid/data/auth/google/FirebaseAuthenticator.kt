@@ -13,15 +13,9 @@ import java.lang.Exception
 import javax.inject.Inject
 
 class FirebaseAuthenticator @Inject constructor() {
-    private var auth: FirebaseAuth
-    private var user: FirebaseUser? = null
-    private val tag = "Firebase Auth"
-    private val clientId: String = ""
     val firebaseAuth = FirebaseAuth.getInstance()
-
-    init{
-        auth = Firebase.auth
-    }
+    private var auth: FirebaseAuth = Firebase.auth
+    private var user: FirebaseUser? = null
 
     fun signUp(email: String, password: String, completion: (Boolean, String?) -> Unit){
         auth.createUserWithEmailAndPassword(email, password)
