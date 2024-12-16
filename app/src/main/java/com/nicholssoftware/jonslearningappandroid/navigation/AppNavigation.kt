@@ -1,6 +1,7 @@
 package com.nicholssoftware.jonslearningappandroid.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,15 +18,14 @@ import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpViewMod
 fun AppNavigation(
     isLoggedIn: Boolean,
     navController: NavHostController,
-    signInViewModel: SignInViewModel,
-    signUpViewModel: SignUpViewModel,
     requestSignInWithGoogle: () -> Unit,
-    emailVerificationViewModel: EmailVerificationViewModel,
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
 ) {
+
     val startScreen = if (isLoggedIn) NavigationConstants.DASHBOARD else NavigationConstants.SIGN_IN
     NavHost(navController = navController, startDestination = startScreen) {
         composable(NavigationConstants.SIGN_IN) {
+            val signInViewModel: SignInViewModel = hiltViewModel()
             SignInScreen(
                 navController = navController,
                 signIntoGoogle = signIntoGoogle,
@@ -47,6 +47,7 @@ fun AppNavigation(
             )
         }
         composable(NavigationConstants.SIGNUP) {
+            val signUpViewModel: SignUpViewModel = hiltViewModel()
             SignUpScreen(
                 navController = navController,
                 signIntoGoogle = signIntoGoogle,
@@ -69,6 +70,7 @@ fun AppNavigation(
             )
         }
         composable(NavigationConstants.EMAIL_VERIFICATION) {
+            val emailVerificationViewModel : EmailVerificationViewModel = hiltViewModel()
             EmailVerificationScreen(
                 showDialog = emailVerificationViewModel.showDialog,
                 dialogMessage = emailVerificationViewModel.dialogMessage,

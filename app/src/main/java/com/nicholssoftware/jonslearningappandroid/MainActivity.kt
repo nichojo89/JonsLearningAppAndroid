@@ -25,13 +25,9 @@ private const val GOOGLE_REQ_ID = 600613
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val isLoggedIn = false
-
-    private val signInViewModel: SignInViewModel by viewModels()
-    private val signUpViewModel: SignUpViewModel by viewModels()
     private var signIntoGoogle: ((GoogleSignInAccount) -> Unit) = {}
-    private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
-    private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var navController: NavHostController
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +45,7 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     isLoggedIn = isLoggedIn,
                     navController = navController,
-                    signInViewModel = signInViewModel,
-                    signUpViewModel = signUpViewModel,
                     requestSignInWithGoogle = { requestSignInWithGoogle() },
-                    emailVerificationViewModel = emailVerificationViewModel,
                     signIntoGoogle = { signIn ->
                         signIntoGoogle = signIn
                     }
