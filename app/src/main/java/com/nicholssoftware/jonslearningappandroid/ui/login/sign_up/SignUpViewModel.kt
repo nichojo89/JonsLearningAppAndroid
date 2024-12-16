@@ -10,7 +10,9 @@ import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.stringutil.isValidEmail
 import javax.inject.Inject
 
-class SignUpViewModel @Inject constructor() : BaseViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val firebaseAuthenticator: FirebaseAuthenticator
+) : BaseViewModel() {
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
 
@@ -50,7 +52,7 @@ class SignUpViewModel @Inject constructor() : BaseViewModel() {
     }
 
     fun signUpWithGoogle(account: GoogleSignInAccount) {
-        FirebaseAuthenticator.signInWithGoogle(account){ success ->
+        firebaseAuthenticator.signInWithGoogle(account){ success ->
             if (success) {
                 updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
             } else {
@@ -62,7 +64,7 @@ class SignUpViewModel @Inject constructor() : BaseViewModel() {
     fun signUp() {
         updateSignUpEnabled(false)
         if(_passwordFlow.value.isNotEmpty() && _passwordFlow.value == _confirmPasswordFlow.value){
-            FirebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success, error ->
+            firebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success, error ->
                 if(success){
                     updateNavigationEvent(NavigationConstants.DASHBOARD)
                 } else {
@@ -95,7 +97,7 @@ class SignUpViewModel @Inject constructor() : BaseViewModel() {
     fun signUpWithGoogle(account: GoogleSignInAccount, navController: NavController) {
         navController.currentDestination?.route.toString().let { route ->
             if(route == NavigationConstants.SIGNUP){
-                FirebaseAuthenticator.signInWithGoogle(account){success ->
+                firebaseAuthenticator.signInWithGoogle(account){success ->
                     if (success) {
                         updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
                     } else {

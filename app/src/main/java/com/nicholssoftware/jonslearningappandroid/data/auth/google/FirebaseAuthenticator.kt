@@ -1,23 +1,18 @@
 package com.nicholssoftware.jonslearningappandroid.data.auth.google
 
-import android.content.Context
-import android.util.Log
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseAuthWebException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import java.lang.Exception
+import javax.inject.Inject
 
-object FirebaseAuthenticator {
+class FirebaseAuthenticator @Inject constructor() {
     private var auth: FirebaseAuth
     private var user: FirebaseUser? = null
     private val tag = "Firebase Auth"

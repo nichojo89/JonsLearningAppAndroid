@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -104,8 +105,8 @@ fun SignUpScreen(
         Image(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
-            contentDescription = "Sign in background image",
-            painter = painterResource(id = R.drawable.sign_in_bg)
+            painter = painterResource(id = R.drawable.sign_in_bg),
+            contentDescription = stringResource(id = R.string.sign_up_background_image)
         )
 
         Card(
@@ -125,7 +126,7 @@ fun SignUpScreen(
                     .fillMaxSize()
             ) {
                 Text(
-                    "Get Started",
+                    stringResource(id = R.string.get_started),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = (height.value * 0.1).dp),
@@ -136,7 +137,7 @@ fun SignUpScreen(
                     )
                 )
                 Text(
-                    "Create your free account",
+                    stringResource(id = R.string.create_free_account),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = TextStyle(
                         color = Color.Gray,
@@ -146,29 +147,29 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
 
                 EmailTextField(
-                    label = "Username",
                     signIn = signUp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                     email = usernameFlow.value,
                     onEmailChange = onUsernameUpdate,
-                    errorMessage = usernameErrorMessage.value
+                    errorMessage = usernameErrorMessage.value,
+                    label = stringResource(id = R.string.username),
                 )
 
                 PasswordTextField(
-                    label = "Password",
                     signIn = signUp,
                     modifier = Modifier
                         .fillMaxWidth(),
                     password = passwordFlow.value,
                     hidePassword = hidePassword.value,
                     onPasswordChange = onPasswordUpdate,
+                    label = stringResource(id = R.string.password),
                     onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
                 if (isConfirmPasswordVisible.value) {
                     PasswordTextField(
-                        label = "Confirm password",
+                        label = stringResource(id = R.string.confirm_password),
                         signIn = signUp,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -193,23 +194,23 @@ fun SignUpScreen(
                             .fillMaxWidth()
                     )
                     Text(
-                        "or sign in with",
+                        stringResource(id = R.string.or_sign_up_with),
+                        fontSize = 16.sp,
+                        color = Color.Gray,
                         modifier = Modifier
                             .zIndex(2f)
                             .align(Alignment.Center)
                             .background(Color.White)
-                            .padding(horizontal = 12.dp),
-                        fontSize = 16.sp,
-                        color = Color.Gray
+                            .padding(horizontal = 12.dp)
                     )
                 }
                 Box(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = 16.dp)
                     .border(
                         BorderStroke(1.dp, Color.Gray),
                         RoundedCornerShape(14.dp)
                     )
-                    .fillMaxWidth()
                     .clickable {
                         requestSignInWithGoogle.invoke()
                     }
@@ -219,8 +220,8 @@ fun SignUpScreen(
                             .align(Alignment.Center)
                             .size(48.dp)
                             .padding(12.dp),
-                        contentDescription = "Sign in with Google",
-                        painter = painterResource(id = R.drawable.ic_google)
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = stringResource(id = R.string.sign_up_with_google),
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -230,10 +231,11 @@ fun SignUpScreen(
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        "Already have an account?",
+                        stringResource(id = R.string.already_have_an_account),
                         textAlign = TextAlign.Center
                     )
-                    Text("Sign in",
+                    Text(
+                        stringResource(id = R.string.sign_in),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -261,7 +263,7 @@ fun SignUpScreen(
                     ),
                 )
                 {
-                    Text("Sign up")
+                    Text(stringResource(id = R.string.sign_up))
                 }
             }
         }

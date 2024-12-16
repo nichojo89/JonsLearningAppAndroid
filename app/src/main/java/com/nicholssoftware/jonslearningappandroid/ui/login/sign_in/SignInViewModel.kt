@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.GoogleAuthProvider
 import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
@@ -13,7 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor() : BaseViewModel() {
+class SignInViewModel @Inject constructor(
+    private val firebaseAuthenticator: FirebaseAuthenticator
+) : BaseViewModel() {
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
 
@@ -55,7 +56,7 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
     fun signIn(){
         if(signInEnabled.value){
             updateSignInEnabled(false)
-            FirebaseAuthenticator.signIn(usernameFlow.value, passwordFlow.value){ success, error ->
+            firebaseAuthenticator.signIn(usernameFlow.value, passwordFlow.value){ success, error ->
                 if(success){
                     updateNavigationEvent(NavigationConstants.DASHBOARD)
                 } else {
@@ -71,7 +72,7 @@ class SignInViewModel @Inject constructor() : BaseViewModel() {
     fun signInWithGoogle(account: GoogleSignInAccount, navController: NavController) {
         navController.currentDestination?.route.toString().let { route ->
             if(route == NavigationConstants.SIGN_IN){
-                FirebaseAuthenticator.signInWithGoogle(account){success ->
+                firebaseAuthenticator.signInWithGoogle(account){success ->
                     if (success) {
                         updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
                     } else {

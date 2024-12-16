@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -91,8 +92,8 @@ fun SignInScreen(
         Image(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
-            contentDescription = "Sign in background image",
-            painter = painterResource(id = R.drawable.sign_in_bg)
+            painter = painterResource(id = R.drawable.sign_in_bg),
+            contentDescription = stringResource(id = R.string.sign_in_background_image)
         )
 
         Card(
@@ -112,7 +113,7 @@ fun SignInScreen(
                     .fillMaxSize()
             ) {
                 Text(
-                    "Welcome Back",
+                    stringResource(id = R.string.welcome_back),
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = (height.value * 0.1).dp),
@@ -123,7 +124,7 @@ fun SignInScreen(
                     )
                 )
                 Text(
-                    "Enter your details below",
+                    stringResource(id = R.string.enter_details_below),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = TextStyle(
                         color = Color.Gray,
@@ -133,18 +134,17 @@ fun SignInScreen(
                 Spacer(modifier = Modifier.height((height.value * 0.03).dp))
 
                 EmailTextField(
-                    label = "Username",
                     signIn = signIn,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 12.dp),
                     email = usernameFlow.value,
                     onEmailChange = onUsernameUpdate,
-                    errorMessage = usernameErrorMessage.value
+                    errorMessage = usernameErrorMessage.value,
+                    label = stringResource(id = R.string.username)
                 )
 
                 PasswordTextField(
-                    label = "Password",
                     signIn = signIn,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -153,13 +153,15 @@ fun SignInScreen(
                     hidePassword = hidePassword.value,
                     onPasswordChange = onPasswordUpdate,
                     errorMessage = passwordErrorMessage.value,
+                    label = stringResource(id = R.string.password),
                     onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                 )
 
-                Text(text = "Forgot password",
-                    color = Color(0xFFAD3689),
-                    fontWeight = FontWeight.Bold,
+                Text(
                     fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFAD3689),
+                    text = stringResource(id = R.string.forgot_password),
                     modifier = Modifier
                         .clickable {
                             sendForgotPassword.invoke()
@@ -177,14 +179,14 @@ fun SignInScreen(
                             .fillMaxWidth()
                     )
                     Text(
-                        "or sign up with",
+                        stringResource(id = R.string.or_sign_in_with),
+                        fontSize = 16.sp,
+                        color = Color.Gray,
                         modifier = Modifier
                             .zIndex(2f)
                             .align(Alignment.Center)
                             .background(Color.White)
                             .padding(horizontal = 12.dp),
-                        fontSize = 16.sp,
-                        color = Color.Gray
                     )
                 }
                 Box(modifier = Modifier
@@ -203,8 +205,8 @@ fun SignInScreen(
                             .align(Alignment.Center)
                             .size(48.dp)
                             .padding(12.dp),
-                        contentDescription = "Sign in with Google",
-                        painter = painterResource(id = R.drawable.ic_google)
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = stringResource(id = R.string.sign_in_with_google)
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -214,10 +216,11 @@ fun SignInScreen(
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        "Need an account?",
+                        stringResource(id = R.string.need_an_account),
                         textAlign = TextAlign.Center
                     )
-                    Text("Create  Account",
+                    Text(
+                        stringResource(id = R.string.need_an_account),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -245,7 +248,7 @@ fun SignInScreen(
                     ),
                 )
                 {
-                    Text("Sign in")
+                    Text(stringResource(id = R.string.sign_in))
                 }
             }
         }

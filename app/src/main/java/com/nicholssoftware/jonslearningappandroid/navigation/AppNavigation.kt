@@ -21,7 +21,6 @@ fun AppNavigation(
     requestSignInWithGoogle: () -> Unit,
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
 ) {
-
     val startScreen = if (isLoggedIn) NavigationConstants.DASHBOARD else NavigationConstants.SIGN_IN
     NavHost(navController = navController, startDestination = startScreen) {
         composable(NavigationConstants.SIGN_IN) {

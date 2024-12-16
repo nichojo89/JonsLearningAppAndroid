@@ -8,7 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class EmailVerificationViewModel @Inject constructor() : ViewModel() {
+class EmailVerificationViewModel @Inject constructor(
+    private val firebaseAuthenticator: FirebaseAuthenticator
+) : ViewModel() {
     private val _showDialog = mutableStateOf(false)
     val showDialog : State<Boolean> = _showDialog
 
@@ -24,7 +26,7 @@ class EmailVerificationViewModel @Inject constructor() : ViewModel() {
     }
 
     fun sendVerificationEmail(completion: (Boolean) -> Unit){
-        FirebaseAuthenticator.sendEmailVerification {success ->
+        firebaseAuthenticator.sendEmailVerification {success ->
             completion(success)
         }
     }

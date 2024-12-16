@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -14,9 +13,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.nicholssoftware.jonslearningappandroid.navigation.AppNavigation
-import com.nicholssoftware.jonslearningappandroid.ui.login.email_verification.EmailVerificationViewModel
-import com.nicholssoftware.jonslearningappandroid.ui.login.sign_in.SignInViewModel
-import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.theme.JonsLearningAppAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -74,7 +70,7 @@ class MainActivity : ComponentActivity() {
                 signIntoGoogle(account)
             }
         } catch (e: ApiException) {
-            Toast.makeText(this, "Google Sign-In Failed: ${e.localizedMessage}", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "${getString(R.string.google_sign_in_failed)}: ${e.localizedMessage}", Toast.LENGTH_SHORT)
                 .show()
         }
     }
