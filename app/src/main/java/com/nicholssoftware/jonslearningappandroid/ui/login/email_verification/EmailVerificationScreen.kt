@@ -1,5 +1,6 @@
 package com.nicholssoftware.jonslearningappandroid.ui.login.email_verification
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nicholssoftware.jonslearningappandroid.R
@@ -41,7 +44,7 @@ import com.nicholssoftware.jonslearningappandroid.navigation.TopBar
 fun EmailVerificationScreen(
     navController: NavController,
     isSendEmailEnabled: State<Boolean>,
-    sendVerificationEmail: () -> Unit
+    sendVerificationEmail: (completion: (Boolean) -> Unit) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -112,11 +115,14 @@ fun EmailVerificationScreen(
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
-
+                        val context = LocalContext.current
                         Button(
                             enabled = isSendEmailEnabled.value,
                             onClick = {
-                                sendVerificationEmail()
+
+                                sendVerificationEmail{
+                                    Toast.makeText(context,R.string.email_verification_sent,Toast.LENGTH_SHORT).show()
+                                }
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -142,7 +148,9 @@ fun EmailVerificationScreen(
 @Composable
 fun EmailVerificationScreenPreview() {
     val isSignInEnabled = remember { mutableStateOf(false) }
-    val sendVerificationEmail: () -> Unit = {}
+    val sendVerificationEmail: (completion: (Boolean) -> Unit) -> Unit = { completion ->
+        completion(true)
+    }
     val navController = rememberNavController()
     EmailVerificationScreen(
         navController = navController,

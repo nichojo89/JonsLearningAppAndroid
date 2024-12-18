@@ -1,24 +1,33 @@
 package com.nicholssoftware.jonslearningappandroid.ui.login.email_verification
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.nicholssoftware.jonslearningappandroid.R
 import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class EmailVerificationViewModel @Inject constructor(
-    private val firebaseAuthenticator: FirebaseAuthenticator
+    private val firebaseAuthenticator: FirebaseAuthenticator,
+    @ApplicationContext context: Context,
 ) : ViewModel() {
     private val _isSendEmailEnabled = mutableStateOf(true)
     val isSendEmailEnabled: State<Boolean> = _isSendEmailEnabled
 
-    fun sendVerificationEmail(){
+    private val _sendText = mutableStateOf(context.getText(R.string.send).toString())
+    val sendText :State<String> = _sendText
+
+    fun sendVerificationEmail(completion: (Boolean) -> Unit){
         _isSendEmailEnabled.value = false
         firebaseAuthenticator.sendEmailVerification {success ->
-//            completion(success)
-            _isSendEmailEnabled.value = true
+            if(success){
+                completion(true)
+                _isSendEmailEnabled.value = true
+            }
         }
     }
 }

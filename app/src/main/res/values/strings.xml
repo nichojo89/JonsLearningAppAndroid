@@ -21,4 +21,6 @@
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="sign_up">Sign up</string>
+    <string name="email_verification_sent">Email sent!</string>
+    <string name="send">Send</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.nicholssoftware.jonslearningappandroid.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -13,7 +15,7 @@ import com.nicholssoftware.jonslearningappandroid.ui.login.sign_in.SignInScreen
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_in.SignInViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpScreen
 import com.nicholssoftware.jonslearningappandroid.ui.login.sign_up.SignUpViewModel
-
+private const val tweenSpeed = 300
 @Composable
 fun AppNavigation(
     isLoggedIn: Boolean,
@@ -23,7 +25,13 @@ fun AppNavigation(
 ) {
     val startScreen = if (isLoggedIn) NavigationConstants.DASHBOARD else NavigationConstants.SIGN_IN
     NavHost(navController = navController, startDestination = startScreen) {
-        composable(NavigationConstants.SIGN_IN) {
+        composable(NavigationConstants.SIGN_IN,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(tweenSpeed)
+                )
+            }) {
             val signInViewModel: SignInViewModel = hiltViewModel()
             SignInScreen(
                 navController = navController,
@@ -45,7 +53,19 @@ fun AppNavigation(
                 usernameErrorMessage = signInViewModel.usernameErrorMessage
             )
         }
-        composable(NavigationConstants.SIGNUP) {
+        composable(NavigationConstants.SIGNUP,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(tweenSpeed)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(tweenSpeed)
+                )
+            }) {
             val signUpViewModel: SignUpViewModel = hiltViewModel()
             SignUpScreen(
                 navController = navController,
@@ -68,7 +88,19 @@ fun AppNavigation(
                 isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile,
             )
         }
-        composable(NavigationConstants.EMAIL_VERIFICATION) {
+        composable(NavigationConstants.EMAIL_VERIFICATION,
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(tweenSpeed)
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(tweenSpeed)
+                )
+            }) {
             val emailVerificationViewModel : EmailVerificationViewModel = hiltViewModel()
             EmailVerificationScreen(
                 navController = navController,
