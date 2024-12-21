@@ -20,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.nicholssoftware.jonslearningappandroid.navigation.AppNavigation
 import com.nicholssoftware.jonslearningappandroid.ui.theme.JonsLearningAppAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,7 +77,20 @@ class MainActivity : ComponentActivity() {
         try {
             val account = task.getResult(ApiException::class.java)
             account?.let {
-                signIntoGoogle(account)
+                val firebaseAuth = FirebaseAuth.getInstance()
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                firebaseAuth.signInWithCredential(credential)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Now get the Firebase ID token
+                            firebaseAuth.currentUser?.getIdToken(true)?.addOnSuccessListener { idToken ->
+                                // Send this Firebase ID token to the backend
+                                val token = idToken.token
+                            }
+                        } else {
+                            Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             }
         } catch (e: ApiException) {
             Toast.makeText(this, "${getString(R.string.google_sign_in_failed)}: ${e.localizedMessage}", Toast.LENGTH_SHORT)
