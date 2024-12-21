@@ -4,7 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.isValidEmail
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val firebaseAuthenticator: FirebaseAuthenticator
+    private val firebaseAuthenticator: FirebaseAuthenticator,
+    private val signInUseCase: SignInUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
 ) : BaseViewModel() {
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
@@ -56,7 +60,7 @@ class SignInViewModel @Inject constructor(
     fun signIn(){
         if(signInEnabled.value){
             updateSignInEnabled(false)
-            firebaseAuthenticator.signIn(usernameFlow.value, passwordFlow.value){ success, error ->
+            signInUseCase(usernameFlow.value, passwordFlow.value){ success, error ->
                 if(success){
                     FirebaseAuthenticator.user?.let { user ->
                         if(user.isEmailVerified) {
@@ -79,7 +83,7 @@ class SignInViewModel @Inject constructor(
     fun signInWithGoogle(account: GoogleSignInAccount, navController: NavController) {
         navController.currentDestination?.route.toString().let { route ->
             if(route == NavigationConstants.SIGN_IN){
-                firebaseAuthenticator.signInWithGoogle(account){success ->
+                signInWithGoogleUseCase(account){success ->
                     if (success) {
                         updateNavigationEvent(NavigationConstants.DASHBOARD)  // Navigate to dashboard on success
                     } else {

@@ -4,7 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.auth.SignUpUseCase
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.isValidEmail
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val firebaseAuthenticator: FirebaseAuthenticator
+    private val firebaseAuthenticator: FirebaseAuthenticator,
+    private val signUpUseCase: SignUpUseCase,
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
 ) : BaseViewModel() {
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
@@ -56,7 +60,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp() {
         updateSignUpEnabled(false)
         if(_passwordFlow.value.isNotEmpty() && _passwordFlow.value == _confirmPasswordFlow.value){
-            firebaseAuthenticator.signUp(usernameFlow.value,passwordFlow.value){success, error ->
+            signUpUseCase(usernameFlow.value,passwordFlow.value){success, error ->
                 if(success){
                     updateNavigationEvent(NavigationConstants.EMAIL_VERIFICATION)
                 } else {
@@ -89,7 +93,7 @@ class SignUpViewModel @Inject constructor(
     fun signUpWithGoogle(account: GoogleSignInAccount, navController: NavController) {
         navController.currentDestination?.route.toString().let { route ->
             if(route == NavigationConstants.SIGNUP){
-                firebaseAuthenticator.signInWithGoogle(account){success ->
+                signInWithGoogleUseCase(account){success ->
                     if (success) {
                         updateNavigationEvent(NavigationConstants.DASHBOARD)
                     } else {

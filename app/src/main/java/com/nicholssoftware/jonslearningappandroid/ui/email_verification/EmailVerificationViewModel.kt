@@ -5,15 +5,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.data.auth.google.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.SendEmailVerificationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
 class EmailVerificationViewModel @Inject constructor(
-    private val firebaseAuthenticator: FirebaseAuthenticator,
     @ApplicationContext context: Context,
+    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
 ) : ViewModel() {
     private val _isSendEmailEnabled = mutableStateOf(true)
     val isSendEmailEnabled: State<Boolean> = _isSendEmailEnabled
@@ -23,7 +24,7 @@ class EmailVerificationViewModel @Inject constructor(
 
     fun sendVerificationEmail(completion: (Boolean) -> Unit){
         _isSendEmailEnabled.value = false
-        firebaseAuthenticator.sendEmailVerification {success ->
+        sendEmailVerificationUseCase {success ->
             if(success){
                 completion(true)
                 _isSendEmailEnabled.value = true
