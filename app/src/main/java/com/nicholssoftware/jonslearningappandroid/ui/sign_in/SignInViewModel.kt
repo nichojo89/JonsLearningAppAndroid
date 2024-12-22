@@ -12,6 +12,7 @@ import com.nicholssoftware.jonslearningappandroid.domain.auth.PasswordResetUseCa
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInRequiredUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.isValidEmail
@@ -29,7 +30,8 @@ class SignInViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val passwordResetUseCase: PasswordResetUseCase,
     private val userSignedInUseCase: SignInRequiredUseCase,
-    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
+    private val preferencesDataSourceImpl : PreferencesDataSource
 ) : BaseViewModel() {
     private val _userSignedIn = MutableStateFlow<Boolean?>(null)
     val userSignedIn: StateFlow<Boolean?> = _userSignedIn.asStateFlow()
@@ -135,6 +137,7 @@ class SignInViewModel @Inject constructor(
             if(route == NavigationConstants.SIGN_IN){
                 signInWithGoogleUseCase(account, rememberUser.value){success ->
                     if (success) {
+                        preferencesDataSourceImpl.setSignedIn(_rememberUser.value)
                         navigateToDashboard(navController)
                     } else {
                         _passwordErrorMessage.value = "Google sign-in failed"
