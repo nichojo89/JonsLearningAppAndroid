@@ -52,7 +52,7 @@ fun EmailVerificationScreen(
                 navController = navController,
                 title = "Verification",
                 showBackButton = true,
-                backButtonShouldPopStack = backButtonShouldPopStack)
+                backButtonShouldPopToSignIn = backButtonShouldPopStack)
         },
         content = { paddingValues ->
             BoxWithConstraints {

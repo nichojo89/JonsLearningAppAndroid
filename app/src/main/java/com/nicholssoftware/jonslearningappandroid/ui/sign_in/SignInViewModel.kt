@@ -27,12 +27,12 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
     private val passwordResetUseCase: PasswordResetUseCase,
-    private val signInRequiredUseCase: SignInRequiredUseCase,
+    private val userSignedInUseCase: SignInRequiredUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
-    private val _isSignInRequired = MutableStateFlow<Boolean?>(null)
-    val isSignInRequired: StateFlow<Boolean?> = _isSignInRequired.asStateFlow()
+    private val _userSignedIn = MutableStateFlow<Boolean?>(null)
+    val userSignedIn: StateFlow<Boolean?> = _userSignedIn.asStateFlow()
 
     private val _usernameFlow = mutableStateOf("")
     val usernameFlow : State<String> = _usernameFlow
@@ -79,8 +79,8 @@ class SignInViewModel @Inject constructor(
 
     private fun checkSignInRequired() {
         viewModelScope.launch {
-            signInRequiredUseCase.invoke {
-                _isSignInRequired.value = it
+            userSignedInUseCase.invoke {
+                _userSignedIn.value = it
             }
         }
     }

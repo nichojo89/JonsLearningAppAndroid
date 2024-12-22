@@ -6,6 +6,6 @@ class SignInRequiredUseCase @Inject constructor(
     private val authenticator: Authenticator
 ) {
     operator fun invoke(completion: (Boolean?) -> Unit){
-        authenticator.userCanSignIn(completion)
+        authenticator.userSignedIn(completion)
     }
 }

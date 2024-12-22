@@ -20,7 +20,6 @@ import com.nicholssoftware.jonslearningappandroid.ui.sign_up.SignUpViewModel
 private const val tweenSpeed = 300
 @Composable
 fun AppNavigation(
-    isLoggedIn: Boolean,
     navController: NavHostController,
     requestSignInWithGoogle: () -> Unit,
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
@@ -47,7 +46,7 @@ fun AppNavigation(
                 updatePassword = signInViewModel::updatePassword,
                 navigationEvent = signInViewModel.navigationEvent,
                 resetNavigation = signInViewModel::resetNavigation,
-                userCanSignIn = signInViewModel.isSignInRequired,
+                userCanSignIn = signInViewModel.userSignedIn,
                 signInWithGoogle = signInViewModel::signInWithGoogle,
                 requestSignInWithGoogle = { requestSignInWithGoogle() },
                 sendForgotPassword = signInViewModel::sendForgotPassword,

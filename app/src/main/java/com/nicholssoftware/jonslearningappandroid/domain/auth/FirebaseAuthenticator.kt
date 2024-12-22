@@ -1,9 +1,7 @@
 package com.nicholssoftware.jonslearningappandroid.domain.auth
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.FirebaseError
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -84,7 +82,7 @@ class FirebaseAuthenticator @Inject constructor(
         }
     }
 
-    override fun userCanSignIn(completion: (Boolean) -> Unit) {
+    override fun userSignedIn(completion: (Boolean) -> Unit) {
         if (user == null) {
             completion(false)
             return

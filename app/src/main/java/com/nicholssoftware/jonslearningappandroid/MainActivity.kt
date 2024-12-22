@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.nicholssoftware.jonslearningappandroid.data.cache.preferences.PreferencesDataSourceImpl
 import com.nicholssoftware.jonslearningappandroid.navigation.AppNavigation
 import com.nicholssoftware.jonslearningappandroid.ui.theme.JonsLearningAppAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,6 @@ private const val GOOGLE_REQ_ID = 600613
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val isLoggedIn = false
     private var signIntoGoogle: ((GoogleSignInAccount) -> Unit) = {}
     private lateinit var navController: NavHostController
     private lateinit var googleSignInClient: GoogleSignInClient
@@ -49,7 +49,6 @@ class MainActivity : ComponentActivity() {
             navController = rememberNavController()
             JonsLearningAppAndroidTheme {
                 AppNavigation(
-                    isLoggedIn = isLoggedIn,
                     navController = navController,
                     requestSignInWithGoogle = { requestSignInWithGoogle() },
                     signIntoGoogle = { signIn ->
@@ -82,10 +81,11 @@ class MainActivity : ComponentActivity() {
                 firebaseAuth.signInWithCredential(credential)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            // Now get the Firebase ID token
                             firebaseAuth.currentUser?.getIdToken(true)?.addOnSuccessListener { idToken ->
-                                // Send this Firebase ID token to the backend
                                 val token = idToken.token
+                                val prefs = PreferencesDataSourceImpl(this)
+                                prefs.setOAuthToken(token.toString())
+                                signIntoGoogle.invoke(account)
                             }
                         } else {
                             Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
