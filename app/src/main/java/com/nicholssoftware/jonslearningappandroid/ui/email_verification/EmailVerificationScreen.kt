@@ -43,8 +43,8 @@ import com.nicholssoftware.jonslearningappandroid.navigation.TopBar
 fun EmailVerificationScreen(
     navController: NavController,
     isSendEmailEnabled: State<Boolean>,
-    sendVerificationEmail: (completion: (Boolean) -> Unit) -> Unit,
-    backButtonShouldPopStack: State<Boolean>
+    backButtonShouldPopStack: State<Boolean>,
+    sendVerificationEmail: (completion: (Boolean) -> Unit) -> Unit
 ) {
     Scaffold(
         topBar = {

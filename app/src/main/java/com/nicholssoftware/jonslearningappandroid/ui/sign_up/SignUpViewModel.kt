@@ -23,6 +23,9 @@ class SignUpViewModel @Inject constructor(
     private val _passwordFlow = mutableStateOf("")
     val passwordFlow : State<String> = _passwordFlow
 
+    private val _signUpEnabled = mutableStateOf(false)
+    val signUpEnabled : State<Boolean> = _signUpEnabled
+
     private val _confirmPasswordFlow = mutableStateOf("")
     val confirmPasswordFlow : State<String> = _confirmPasswordFlow
 
@@ -31,9 +34,6 @@ class SignUpViewModel @Inject constructor(
 
     private val _passwordErrorMessage = mutableStateOf("")
     val passwordErrorMessage : State<String> = _passwordErrorMessage
-
-    private val _signUpEnabled = mutableStateOf(false)
-    val signUpEnabled : State<Boolean> = _signUpEnabled
 
     private val _isConfirmPasswordVisible = mutableStateOf(false)
     val isConfirmPasswordVisibile : State<Boolean> = _isConfirmPasswordVisible
@@ -58,7 +58,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp() {
         updateSignUpEnabled(false)
         if(_passwordFlow.value.isNotEmpty() && _passwordFlow.value == _confirmPasswordFlow.value){
-            signUpUseCase(usernameFlow.value,passwordFlow.value){success, error ->
+            signUpUseCase(usernameFlow.value,passwordFlow.value){ success, error ->
                 if(success){
                     updateNavigationEvent(NavigationConstants.EMAIL_VERIFICATION)
                 } else {
@@ -101,6 +101,4 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
-
-
 }

@@ -52,6 +52,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SignInScreen(
+    signIn: () -> Unit = {},
     usernameFlow: State<String>,
     passwordFlow: State<String>,
     navController: NavController,
@@ -59,16 +60,16 @@ fun SignInScreen(
     signInEnabled: State<Boolean>,
     createAccount: () -> Unit = {},
     resetNavigation: () -> Unit = {},
+    userCanSignIn: StateFlow<Boolean?>,
     navigationEvent: StateFlow<String?>,
     sendForgotPassword: () -> Unit = {},
     usernameErrorMessage: State<String>,
     passwordErrorMessage: State<String>,
     validateCredentials: () -> Unit = {},
-    signIn: () -> Unit = {},
-    userCanSignIn: StateFlow<Boolean?>,
     updateUsername: (String) -> Unit = {},
     updatePassword: (String) -> Unit = {},
     requestSignInWithGoogle: () -> Unit = {},
+    updateRememberUser: (Boolean) -> Unit = {},
     updateNavController: (NavController) -> Unit = {},
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit,
     signInWithGoogle: (account: GoogleSignInAccount, navController: NavController) -> Unit = { _: GoogleSignInAccount, _: NavController -> }
@@ -109,7 +110,6 @@ fun SignInScreen(
     }
 
     BoxWithConstraints {
-
         val height = maxHeight
         Image(
             contentScale = ContentScale.Crop,
@@ -138,8 +138,8 @@ fun SignInScreen(
                     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.progress_indicator))
                     val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
                     LottieAnimation(
-                        composition = composition,
                         progress = progress,
+                        composition = composition,
                         modifier = Modifier.size(200.dp)
                     )
                 }
@@ -169,7 +169,6 @@ fun SignInScreen(
                         )
                     )
                     Spacer(modifier = Modifier.height((height.value * 0.03).dp))
-
                     EmailTextField(
                         signIn = signIn,
                         modifier = Modifier
@@ -189,8 +188,8 @@ fun SignInScreen(
                         password = passwordFlow.value,
                         hidePassword = hidePassword.value,
                         onPasswordChange = onPasswordUpdate,
-                        errorMessage = passwordErrorMessage.value,
                         label = stringResource(id = R.string.password),
+                        errorMessage = passwordErrorMessage.value,
                         onTrailingIconClick = { hidePassword.value = !hidePassword.value }
                     )
 
@@ -209,22 +208,22 @@ fun SignInScreen(
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
                             fontSize = 16.sp,
+                            text = "Remember me",
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFAD3689),
-                            text = "Remember me",
                             modifier = Modifier
                                 .clickable {
-                                    sendForgotPassword.invoke()
+                                    updateRememberUser.invoke(!rememberUser.value)
                                 }
                         )
                         Checkbox(
                             checked = rememberUser.value,
-                            onCheckedChange = {},
                             colors = CheckboxDefaults.colors(
                                 checkedColor = Color(0xFFAD3689),
                                 uncheckedColor = Color.Gray,
                                 checkmarkColor = Color.White
-                            )
+                            ),
+                            onCheckedChange = {updateRememberUser.invoke(!rememberUser.value)}
                         )
                     }
                     Spacer(modifier = Modifier.height((height.value * 0.03).dp))

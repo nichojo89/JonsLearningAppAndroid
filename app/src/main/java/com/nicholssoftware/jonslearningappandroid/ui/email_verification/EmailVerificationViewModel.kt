@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SendEmailVerificationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

@@ -26,10 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
+    @ApplicationContext private val context: Context,
     private val passwordResetUseCase: PasswordResetUseCase,
     private val userSignedInUseCase: SignInRequiredUseCase,
-    private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    @ApplicationContext private val context: Context
+    private val signInWithGoogleUseCase: SignInWithGoogleUseCase
 ) : BaseViewModel() {
     private val _userSignedIn = MutableStateFlow<Boolean?>(null)
     val userSignedIn: StateFlow<Boolean?> = _userSignedIn.asStateFlow()
@@ -58,10 +58,6 @@ class SignInViewModel @Inject constructor(
         checkSignInRequired()
     }
 
-    fun updateNavController(navController: NavController){
-        _navController = navController
-    }
-
     fun updateUsername(username: String){
         _usernameFlow.value = username
     }
@@ -77,12 +73,24 @@ class SignInViewModel @Inject constructor(
         _signInEnabled.value = signInEnabled
     }
 
+    fun updateNavController(navController: NavController){
+        _navController = navController
+    }
+
     private fun checkSignInRequired() {
         viewModelScope.launch {
             userSignedInUseCase.invoke {
                 _userSignedIn.value = it
             }
         }
+    }
+
+    fun updateRememberUser(remember:Boolean){
+        _rememberUser.value = remember
+    }
+
+    fun createAccount(){
+        updateNavigationEvent(NavigationConstants.SIGNUP)
     }
 
     fun sendForgotPassword(){
@@ -100,14 +108,6 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun updateRememberUser(remember:Boolean){
-        _rememberUser.value = remember
-    }
-
-    fun createAccount(){
-        updateNavigationEvent(NavigationConstants.SIGNUP)
-    }
-
     fun signIn(){
         if(signInEnabled.value){
             updateSignInEnabled(false)
@@ -120,21 +120,12 @@ class SignInViewModel @Inject constructor(
                             updateNavigationEvent(NavigationConstants.EMAIL_VERIFICATION)
                         }
                     }
-
                 } else {
                     error?.let {
                         updatePasswordErrorMessage(it)
                     }
                 }
                 validateCredentials()
-            }
-        }
-    }
-
-    fun navigateToDashboard(navController: NavController?){
-        navController?.let {
-            it.navigate(NavigationConstants.DASHBOARD){
-                popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
             }
         }
     }
@@ -163,6 +154,14 @@ class SignInViewModel @Inject constructor(
             updateSignInEnabled(true)
         } else {
             updateSignInEnabled(false)
+        }
+    }
+
+    private fun navigateToDashboard(navController: NavController?){
+        navController?.let {
+            it.navigate(NavigationConstants.DASHBOARD){
+                popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
+            }
         }
     }
 }

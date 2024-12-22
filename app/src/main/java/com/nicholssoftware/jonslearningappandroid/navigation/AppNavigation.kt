@@ -17,7 +17,9 @@ import com.nicholssoftware.jonslearningappandroid.ui.sign_in.SignInScreen
 import com.nicholssoftware.jonslearningappandroid.ui.sign_in.SignInViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.sign_up.SignUpScreen
 import com.nicholssoftware.jonslearningappandroid.ui.sign_up.SignUpViewModel
+
 private const val tweenSpeed = 300
+
 @Composable
 fun AppNavigation(
     navController: NavHostController,
@@ -40,15 +42,16 @@ fun AppNavigation(
                 rememberUser = signInViewModel.rememberUser,
                 usernameFlow = signInViewModel.usernameFlow,
                 passwordFlow = signInViewModel.passwordFlow,
+                userCanSignIn = signInViewModel.userSignedIn,
                 signInEnabled = signInViewModel.signInEnabled,
                 createAccount = signInViewModel::createAccount,
                 updateUsername = signInViewModel::updateUsername,
                 updatePassword = signInViewModel::updatePassword,
                 navigationEvent = signInViewModel.navigationEvent,
                 resetNavigation = signInViewModel::resetNavigation,
-                userCanSignIn = signInViewModel.userSignedIn,
                 signInWithGoogle = signInViewModel::signInWithGoogle,
                 requestSignInWithGoogle = { requestSignInWithGoogle() },
+                updateRememberUser = signInViewModel::updateRememberUser,
                 sendForgotPassword = signInViewModel::sendForgotPassword,
                 updateNavController = signInViewModel::updateNavController,
                 validateCredentials = signInViewModel::validateCredentials,

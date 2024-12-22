@@ -4,19 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.navigation.NavController
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.font.FontAwesomeIcon
 
 @Composable
 fun PasswordTextField(
     label: String,
-    signIn : () -> Unit,
-    modifier: Modifier,
     password: String,
-    onPasswordChange: (String) -> Unit,
-    onTrailingIconClick: () -> Unit,
+    modifier: Modifier,
+    signIn : () -> Unit,
     hidePassword: Boolean,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    onTrailingIconClick: () -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
     val trailingIcon =
         if (hidePassword) FontAwesomeIcon.EYESLASH

@@ -34,8 +34,8 @@ import androidx.navigation.compose.rememberNavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    navController: NavController,
     title: String = "",
+    navController: NavController,
     showBackButton: Boolean = false,
     backButtonShouldPopToSignIn: State<Boolean> = mutableStateOf(false)
 ) {
