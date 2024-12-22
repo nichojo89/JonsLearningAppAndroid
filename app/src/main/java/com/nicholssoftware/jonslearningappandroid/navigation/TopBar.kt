@@ -48,24 +48,20 @@ fun TopBar(
     backButtonShouldPopStack: State<Boolean> = mutableStateOf(false)
 ) {
     val backButtonVisible = navController.previousBackStackEntry != null || showBackButton
-
-    // Create a Box to hold both the image and the TopAppBar
     Box(
         modifier = Modifier
-            .fillMaxWidth() // Fill the width of the screen
-            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)) // Rounded corners
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
     ) {
-        // Background image that fills the top bar area dynamically
         Image(
             painter = painterResource(id = R.drawable.ic_topbar_bg),
             contentDescription = "Top Bar Background",
-            contentScale = ContentScale.Crop, // Crop the image to maintain aspect ratio
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 56.dp) // Dynamic height, with minimum height matching TopAppBar
+                .heightIn(min = 56.dp)
         )
 
-        // The TopAppBar itself, transparent background to allow image behind it
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.Transparent,

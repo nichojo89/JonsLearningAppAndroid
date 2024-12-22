@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignUpUseCase
 import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
@@ -15,7 +14,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val firebaseAuthenticator: FirebaseAuthenticator,
     private val signUpUseCase: SignUpUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase
 ) : BaseViewModel() {
@@ -93,7 +91,7 @@ class SignUpViewModel @Inject constructor(
     fun signUpWithGoogle(account: GoogleSignInAccount, navController: NavController) {
         navController.currentDestination?.route.toString().let { route ->
             if(route == NavigationConstants.SIGNUP){
-                signInWithGoogleUseCase(account){success ->
+                signInWithGoogleUseCase(account, true ){success ->
                     if (success) {
                         updateNavigationEvent(NavigationConstants.DASHBOARD)
                     } else {
@@ -103,4 +101,6 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
+
+
 }

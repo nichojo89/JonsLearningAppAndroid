@@ -2,6 +2,7 @@ package com.nicholssoftware.jonslearningappandroid.ui.common_components.text_fie
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.font.FontAwesomeIcon
 
 @Composable

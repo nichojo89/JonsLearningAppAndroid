@@ -25,8 +25,7 @@ fun AppNavigation(
     requestSignInWithGoogle: () -> Unit,
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
 ) {
-    val startScreen = if (isLoggedIn) NavigationConstants.DASHBOARD else NavigationConstants.SIGN_IN
-    NavHost(navController = navController, startDestination = startScreen) {
+    NavHost(navController = navController, startDestination = NavigationConstants.SIGN_IN) {
         composable(NavigationConstants.SIGN_IN,
             enterTransition = {
                 slideIntoContainer(
@@ -39,6 +38,7 @@ fun AppNavigation(
                 navController = navController,
                 signIntoGoogle = signIntoGoogle,
                 signIn = signInViewModel::signIn,
+                rememberUser = signInViewModel.rememberUser,
                 usernameFlow = signInViewModel.usernameFlow,
                 passwordFlow = signInViewModel.passwordFlow,
                 signInEnabled = signInViewModel.signInEnabled,
@@ -47,12 +47,14 @@ fun AppNavigation(
                 updatePassword = signInViewModel::updatePassword,
                 navigationEvent = signInViewModel.navigationEvent,
                 resetNavigation = signInViewModel::resetNavigation,
+                userCanSignIn = signInViewModel.isSignInRequired,
                 signInWithGoogle = signInViewModel::signInWithGoogle,
                 requestSignInWithGoogle = { requestSignInWithGoogle() },
                 sendForgotPassword = signInViewModel::sendForgotPassword,
+                updateNavController = signInViewModel::updateNavController,
                 validateCredentials = signInViewModel::validateCredentials,
                 passwordErrorMessage = signInViewModel.passwordErrorMessage,
-                usernameErrorMessage = signInViewModel.usernameErrorMessage
+                usernameErrorMessage = signInViewModel.usernameErrorMessage,
             )
         }
         composable(NavigationConstants.SIGNUP,
