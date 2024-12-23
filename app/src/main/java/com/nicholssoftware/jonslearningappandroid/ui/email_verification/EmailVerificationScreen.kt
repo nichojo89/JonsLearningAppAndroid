@@ -94,7 +94,7 @@ fun EmailVerificationScreen(
                             )
                         )
                         Text(
-                            "Send email verification",
+                            "Please verify email before signing in",
                             modifier = Modifier.align(Alignment.CenterHorizontally),
                             style = TextStyle(
                                 color = Color.Gray,
