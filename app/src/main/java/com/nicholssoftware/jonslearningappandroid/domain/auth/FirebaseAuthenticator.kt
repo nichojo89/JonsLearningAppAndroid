@@ -82,28 +82,6 @@ class FirebaseAuthenticator @Inject constructor(
         }
     }
 
-    override fun userSignedIn(completion: (Boolean) -> Unit) {
-        if (user == null) {
-            completion(false)
-            return
-        }
-        val rememberSignIn = preferencesDataSourceImpl.isSignedIn()
-        user?.let {
-            it.getIdToken(true).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val idToken = task.result?.token
-                    if (idToken != null && rememberSignIn && it.isEmailVerified) {
-                        completion(true)
-                    } else {
-                        completion(false)
-                    }
-                } else {
-                    completion(false)
-                }
-            }
-        }
-    }
-
     override fun sendPasswordResetEmail(email: String, onResult: (Boolean) -> Unit) {
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->

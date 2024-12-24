@@ -9,7 +9,6 @@ import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
 import com.nicholssoftware.jonslearningappandroid.domain.auth.PasswordResetUseCase
-import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInRequiredUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
 import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
@@ -29,7 +28,6 @@ class SignInViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
     @ApplicationContext private val context: Context,
     private val passwordResetUseCase: PasswordResetUseCase,
-    private val userSignedInUseCase: SignInRequiredUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val preferencesDataSourceImpl : PreferencesDataSource
 ) : BaseViewModel() {
@@ -80,11 +78,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun checkSignInRequired() {
-        viewModelScope.launch {
-            userSignedInUseCase.invoke {
-                _userSignedIn.value = it
-            }
-        }
+        _userSignedIn.value  = preferencesDataSourceImpl.isSignedIn()
     }
 
     fun updateRememberUser(remember:Boolean){
