@@ -10,6 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.nicholssoftware.jonslearningappandroid.ui.characters.character_gen.CharacterGeneratorScreen
+import com.nicholssoftware.jonslearningappandroid.ui.characters.character_gen.CharacterGeneratorViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.dashboard.DashboardScreen
 import com.nicholssoftware.jonslearningappandroid.ui.email_verification.EmailVerificationScreen
 import com.nicholssoftware.jonslearningappandroid.ui.email_verification.EmailVerificationViewModel
@@ -117,6 +119,16 @@ fun AppNavigation(
         }
         composable(NavigationConstants.DASHBOARD) {
             DashboardScreen()
+        }
+        composable(NavigationConstants.CHARACTER_GENERATION) {
+            val characterGeneratorViewModel : CharacterGeneratorViewModel = hiltViewModel()
+            CharacterGeneratorScreen(
+                characterGeneratorViewModel.prompt,
+                characterGeneratorViewModel.title,
+                characterGeneratorViewModel.generateCharacterEnabled,
+                characterGeneratorViewModel::updatePrompt,
+                characterGeneratorViewModel::generateCharacter
+            )
         }
     }
 }

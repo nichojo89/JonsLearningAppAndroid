@@ -6,5 +6,6 @@ class NavigationConstants {
         const val SIGN_IN = "signin"
         const val SIGNUP = "signup"
         const val EMAIL_VERIFICATION = "emailverification"
+        const val CHARACTER_GENERATION = "charactergeneration"
     }
 }
