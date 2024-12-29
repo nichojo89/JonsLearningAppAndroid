@@ -1,5 +1,7 @@
 package com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -7,6 +9,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -43,16 +46,28 @@ fun DOSStyleOutlinedTextField(
     OutlinedTextField(
         value = prompt.value,
         onValueChange = { updatePrompt(it) },
-        label = { Text(title.value) },
+        label = { Text(
+            title.value,
+            modifier = Modifier
+                .background(Color.Black)
+                .border(1.dp,Color.Green)
+                .padding(2.dp)
+        ) },
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Green,
-            unfocusedBorderColor = Color.Green,
+            .fillMaxWidth(),
+        colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.Green,
             unfocusedTextColor = Color.Green,
-            containerColor = Color.Black
+            focusedContainerColor = Color.Black,
+            unfocusedContainerColor = Color.Black,
+            disabledContainerColor = Color.Black,
+            errorContainerColor = Color.Transparent,
+            cursorColor = Color.Green,
+            errorCursorColor = Color.Green,
+            focusedBorderColor = Color.Green,
+            unfocusedBorderColor = Color.Green,
+            focusedLabelColor = Color.Green,
+            unfocusedLabelColor = Color.Green
         ),
         textStyle = TextStyle(
             color = Color.Green,
@@ -61,8 +76,6 @@ fun DOSStyleOutlinedTextField(
             fontSize = 10.sp,
             lineHeight = 20.sp
         ),
-        maxLines = 5,
-        minLines = 1,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Default

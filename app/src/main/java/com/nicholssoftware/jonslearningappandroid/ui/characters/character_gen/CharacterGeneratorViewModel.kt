@@ -1,28 +1,102 @@
 package com.nicholssoftware.jonslearningappandroid.ui.characters.character_gen
 
+import android.content.ContentValues
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel
-class CharacterGeneratorViewModel @Inject constructor() : ViewModel(){
-    private val _prompt = mutableStateOf("Cyberpunk warrior, futuristic, sci fi, bearded man")
-    val prompt: State<String> = _prompt
+class CharacterGeneratorViewModel @Inject constructor(
+    @ApplicationContext private val context: Context
+) : ViewModel(){
+    private var _isImageSet = mutableStateOf(false)
+    var isImageSet: State<Boolean> = _isImageSet
+
+    private val _isSelectImage = mutableStateOf(false)
+    val isSelectImage : State<Boolean> = _isSelectImage
 
     private val _title = mutableStateOf("Describe character")
     val title: State<String> = _title
 
+    private var _selectedImageUri = mutableStateOf<Uri?>(null)
+    var selectedImageUri : State<Uri?> = _selectedImageUri
+
+    private val _prompt = mutableStateOf("Cyberpunk warrior, futuristic, sci fi, bearded man")
+    val prompt: State<String> = _prompt
+
     private val _generateCharacterEnabled = mutableStateOf(true)
     val generateCharacterEnabled: State<Boolean> = _generateCharacterEnabled
-
 
     fun updatePrompt(prompt: String){
         _prompt.value = prompt
     }
 
-    fun generateCharacter(){
+    fun updateSelectImage(isSelectImage: Boolean){
+        _isSelectImage.value = isSelectImage
+    }
 
+    fun updateSelectedImageUri(uri: Uri?){
+        _selectedImageUri.value = uri
+    }
+
+    fun updateIsImageSet(isImageSet: Boolean){
+        _isImageSet.value = isImageSet
+    }
+
+    fun handleTakePictureResult(isSuccess: Boolean) {
+        if (isSuccess) {
+            _selectedImageUri.value?.let {
+                try {
+                    context.contentResolver.openInputStream(it)?.use {
+                        updateIsImageSet(true)
+                    } ?: run {
+                        updateSelectedImageUri(null)
+                        showToast("Image file not found after capture")
+                    }
+                } catch (e: Exception) {
+                    updateSelectedImageUri(null)
+                    showToast("Error reading image: ${e.message}")
+                }
+            } ?: updateSelectedImageUri(null)
+        } else {
+            showToast("Failed to capture image")
+            updateSelectedImageUri(null)
+        }
+        _isSelectImage.value = false
+    }
+
+    fun createImageFile(): Uri? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/MyApp")
+        }
+
+        return try {
+            val resolver = context.contentResolver
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues).also {
+                Log.d("FileCreation", "Image file created: $it")
+            }
+        } catch (e: Exception) {
+            Log.e("FileCreation", "Failed to create image file: ${e.message}")
+            null
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun generateCharacter(){
+        //TODO API Call
     }
 }
