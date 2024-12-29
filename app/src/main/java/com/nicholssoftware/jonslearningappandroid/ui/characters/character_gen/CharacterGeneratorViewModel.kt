@@ -10,13 +10,17 @@ import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nicholssoftware.jonslearningappandroid.domain.generate_character.usecase.GenerateCharacterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CharacterGeneratorViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val generateCharacterUseCase: GenerateCharacterUseCase
 ) : ViewModel(){
     private var _isImageSet = mutableStateOf(false)
     var isImageSet: State<Boolean> = _isImageSet
@@ -33,15 +37,20 @@ class CharacterGeneratorViewModel @Inject constructor(
     private val _prompt = mutableStateOf("Cyberpunk warrior, futuristic, sci fi, bearded man")
     val prompt: State<String> = _prompt
 
-    private val _generateCharacterEnabled = mutableStateOf(true)
+    private val _generateCharacterEnabled = mutableStateOf(false)
     val generateCharacterEnabled: State<Boolean> = _generateCharacterEnabled
 
     fun updatePrompt(prompt: String){
         _prompt.value = prompt
+        updateGenerateCharacterEnabled()
     }
 
     fun updateSelectImage(isSelectImage: Boolean){
         _isSelectImage.value = isSelectImage
+        updateGenerateCharacterEnabled()
+    }
+    fun updateGenerateCharacterEnabled(){
+        _generateCharacterEnabled.value = _prompt.value.isNotEmpty() || _selectedImageUri.value != null
     }
 
     fun updateSelectedImageUri(uri: Uri?){
@@ -97,6 +106,11 @@ class CharacterGeneratorViewModel @Inject constructor(
     }
 
     fun generateCharacter(){
-        //TODO API Call
+        if(_generateCharacterEnabled.value){
+            viewModelScope.launch {
+                val response = generateCharacterUseCase.invoke(_selectedImageUri.value, _prompt.value)
+                print(response)
+            }
+        }
     }
 }

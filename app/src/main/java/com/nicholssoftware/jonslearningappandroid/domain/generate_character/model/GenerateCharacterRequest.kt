@@ -4,6 +4,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 data class GenerateCharacterRequest(
-    val image: MultipartBody.Part,
+    val image: MultipartBody.Part?,
     val prompt: RequestBody
 )

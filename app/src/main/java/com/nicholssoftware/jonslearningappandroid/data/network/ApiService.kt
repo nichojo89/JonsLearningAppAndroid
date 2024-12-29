@@ -5,8 +5,9 @@ import com.nicholssoftware.jonslearningappandroid.domain.generate_character.mode
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface ApiService {
-    @GET("ImageToImage/GenerateCharacter")
-    suspend fun fetchData(@Body requestBody: GenerateCharacterRequest): Response<GenerateCharacterResponse>
+    @POST("/ImageToImage/GenerateCharacter")
+    suspend fun GenerateCharacter(@Body requestBody: GenerateCharacterRequest): Response<GenerateCharacterResponse>
 }

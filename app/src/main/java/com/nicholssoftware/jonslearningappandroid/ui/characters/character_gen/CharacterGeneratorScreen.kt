@@ -235,7 +235,7 @@ fun CharacterGeneratorScreen(
 fun CharacterGeneratorScreenPreview() {
     val promptState = remember { mutableStateOf("Enter character details here...") }
     val titleState =remember { mutableStateOf("Character Generator")}
-    val generateCharacterEnabled = remember {mutableStateOf(true)}
+    val generateCharacterEnabled = remember {mutableStateOf(false)}
     val isImageSelected = remember {mutableStateOf(false)}
     val selectedImageUri = remember {mutableStateOf<Uri?>(null)}
     val isImageSet = remember {mutableStateOf(false)}
