@@ -8,4 +8,5 @@ interface Authenticator {
     fun signInWithGoogle(account: GoogleSignInAccount, rememberUser: Boolean, completion: (Boolean) -> Unit)
     fun sendEmailVerification(completion: (Boolean) -> Unit)
     fun sendPasswordResetEmail(email: String, onResult: (Boolean) -> Unit)
+    suspend fun getToken(): String?
 }

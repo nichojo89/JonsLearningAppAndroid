@@ -1,5 +1,6 @@
 package com.nicholssoftware.jonslearningappandroid.domain.auth.repository
 
+import android.util.Base64
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -9,8 +10,12 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.nicholssoftware.jonslearningappandroid.domain.preferences.repository.PreferencesDataSource
+import org.json.JSONObject
 import java.lang.Exception
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class FirebaseAuthenticator @Inject constructor(
     private val preferencesDataSourceImpl : PreferencesDataSource
@@ -87,6 +92,66 @@ class FirebaseAuthenticator @Inject constructor(
             .addOnCompleteListener { task ->
                 onResult(true)
             }
+    }
+
+    override suspend fun getToken(): String? {
+        // Retrieve the current token from preferences
+        val currentToken = preferencesDataSourceImpl.getOAuthToken()
+
+        // Check if the token is expired or null
+        if (currentToken == null || isTokenExpired(currentToken)) {
+            // Refresh the token if it's expired or null
+            return refreshToken()
+        }
+
+        // Otherwise, return the valid token
+        return currentToken
+    }
+
+    // Function to check if the token has expired
+    private fun isTokenExpired(token: String): Boolean {
+        val decodedToken = decodeJwt(token)
+        val expirationTime = decodedToken?.get("exp") as? Long ?: return true
+        // Convert expiration time from seconds to milliseconds and compare
+        return expirationTime * 1000 < System.currentTimeMillis()
+    }
+
+    // Function to decode the JWT and extract information such as expiration time
+    private fun decodeJwt(token: String): Map<String, Any>? {
+        val parts = token.split(".")
+        if (parts.size == 3) {
+            val payload = String(Base64.decode(parts[1], Base64.URL_SAFE))
+            val json = JSONObject(payload)
+            val result = mutableMapOf<String, Any>()
+            json.keys().forEach { key ->
+                result[key] = json.get(key)
+            }
+            return result
+        }
+        return null
+    }
+
+    // Refresh the token if it's expired or missing
+    private suspend fun refreshToken(): String? {
+        val currentUser = firebaseAuth.currentUser ?: throw Exception("No authenticated user found.")
+
+        return suspendCoroutine { continuation ->
+            // Force refresh the token
+            currentUser.getIdToken(true).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val newToken = task.result?.token
+                    if (newToken != null) {
+                        // Save the new token to preferences
+                        preferencesDataSourceImpl.setOAuthToken(newToken)
+                        continuation.resume(newToken)
+                    } else {
+                        continuation.resumeWithException(Exception("Failed to refresh token"))
+                    }
+                } else {
+                    continuation.resumeWithException(task.exception ?: Exception("Failed to refresh token"))
+                }
+            }
+        }
     }
 
     private fun isAuthenticated(): Boolean = user != null
