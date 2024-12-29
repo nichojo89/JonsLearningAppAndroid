@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.navigation.TopBar
+import com.nicholssoftware.jonslearningappandroid.ui.navigation.TopBar
 
 @Composable
 fun EmailVerificationScreen(

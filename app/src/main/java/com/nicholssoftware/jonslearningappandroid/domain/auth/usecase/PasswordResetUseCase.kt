@@ -1,5 +1,6 @@
-package com.nicholssoftware.jonslearningappandroid.domain.auth
+package com.nicholssoftware.jonslearningappandroid.domain.auth.usecase
 
+import com.nicholssoftware.jonslearningappandroid.domain.auth.repository.Authenticator
 import javax.inject.Inject
 
 class PasswordResetUseCase @Inject constructor(

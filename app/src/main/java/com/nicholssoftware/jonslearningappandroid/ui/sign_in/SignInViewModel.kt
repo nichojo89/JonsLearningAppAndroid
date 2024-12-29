@@ -4,15 +4,14 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.nicholssoftware.jonslearningappandroid.domain.auth.FirebaseAuthenticator
-import com.nicholssoftware.jonslearningappandroid.domain.auth.PasswordResetUseCase
-import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInUseCase
-import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
-import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
-import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
+import com.nicholssoftware.jonslearningappandroid.domain.auth.repository.FirebaseAuthenticator
+import com.nicholssoftware.jonslearningappandroid.domain.auth.usecase.PasswordResetUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.auth.usecase.SignInUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.auth.usecase.SignInWithGoogleUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.preferences.repository.PreferencesDataSource
+import com.nicholssoftware.jonslearningappandroid.domain.network.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +19,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.domain.auth
+package com.nicholssoftware.jonslearningappandroid.domain.auth.repository
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
+import com.nicholssoftware.jonslearningappandroid.domain.preferences.repository.PreferencesDataSource
 import java.lang.Exception
 import javax.inject.Inject
 

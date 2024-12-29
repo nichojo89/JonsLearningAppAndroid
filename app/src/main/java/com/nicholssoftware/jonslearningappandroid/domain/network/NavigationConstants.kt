@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.navigation
+package com.nicholssoftware.jonslearningappandroid.domain.network
 
 class NavigationConstants {
     companion object {

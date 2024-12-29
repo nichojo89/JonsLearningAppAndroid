@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.navigation.TopBar
+import com.nicholssoftware.jonslearningappandroid.ui.navigation.TopBar
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.EmailTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.PasswordTextField
 import kotlinx.coroutines.flow.MutableStateFlow

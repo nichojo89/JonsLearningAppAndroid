@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.domain.auth
+package com.nicholssoftware.jonslearningappandroid.domain.auth.repository
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 

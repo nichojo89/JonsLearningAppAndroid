@@ -44,7 +44,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.nicholssoftware.jonslearningappandroid.R
-import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
+import com.nicholssoftware.jonslearningappandroid.domain.network.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.EmailTextField
 import com.nicholssoftware.jonslearningappandroid.ui.common_components.text_field.PasswordTextField
 import kotlinx.coroutines.flow.MutableStateFlow

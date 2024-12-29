@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.navigation
+package com.nicholssoftware.jonslearningappandroid.ui.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.nicholssoftware.jonslearningappandroid.domain.network.NavigationConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

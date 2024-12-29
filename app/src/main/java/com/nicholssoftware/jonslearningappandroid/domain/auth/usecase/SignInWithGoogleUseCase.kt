@@ -1,6 +1,7 @@
-package com.nicholssoftware.jonslearningappandroid.domain.auth
+package com.nicholssoftware.jonslearningappandroid.domain.auth.usecase
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.nicholssoftware.jonslearningappandroid.domain.auth.repository.Authenticator
 import javax.inject.Inject
 
 class SignInWithGoogleUseCase @Inject constructor(

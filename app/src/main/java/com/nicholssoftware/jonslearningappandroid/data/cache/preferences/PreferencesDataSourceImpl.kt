@@ -3,7 +3,7 @@ package com.nicholssoftware.jonslearningappandroid.data.cache.preferences
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
+import com.nicholssoftware.jonslearningappandroid.domain.preferences.repository.PreferencesDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

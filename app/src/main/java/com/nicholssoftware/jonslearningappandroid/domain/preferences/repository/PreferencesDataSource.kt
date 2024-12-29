@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.domain.preferences
+package com.nicholssoftware.jonslearningappandroid.domain.preferences.repository
 
 interface PreferencesDataSource {
     fun isSignedIn(): Boolean

@@ -1,4 +1,4 @@
-package com.nicholssoftware.jonslearningappandroid.navigation
+package com.nicholssoftware.jonslearningappandroid.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.nicholssoftware.jonslearningappandroid.domain.network.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.characters.character_gen.CharacterGeneratorScreen
 import com.nicholssoftware.jonslearningappandroid.ui.characters.character_gen.CharacterGeneratorViewModel
 import com.nicholssoftware.jonslearningappandroid.ui.dashboard.DashboardScreen
@@ -30,7 +31,8 @@ fun AppNavigation(
     signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = NavigationConstants.SIGN_IN) {
-        composable(NavigationConstants.SIGN_IN,
+        composable(
+            NavigationConstants.SIGN_IN,
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Up,
@@ -62,7 +64,8 @@ fun AppNavigation(
                 usernameErrorMessage = signInViewModel.usernameErrorMessage,
             )
         }
-        composable(NavigationConstants.SIGNUP,
+        composable(
+            NavigationConstants.SIGNUP,
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Up,
@@ -97,7 +100,8 @@ fun AppNavigation(
                 isConfirmPasswordVisible = signUpViewModel.isConfirmPasswordVisibile,
             )
         }
-        composable(NavigationConstants.EMAIL_VERIFICATION,
+        composable(
+            NavigationConstants.EMAIL_VERIFICATION,
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Up,

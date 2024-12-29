@@ -4,9 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavController
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.nicholssoftware.jonslearningappandroid.domain.auth.SignInWithGoogleUseCase
-import com.nicholssoftware.jonslearningappandroid.domain.auth.SignUpUseCase
-import com.nicholssoftware.jonslearningappandroid.navigation.NavigationConstants
+import com.nicholssoftware.jonslearningappandroid.domain.auth.usecase.SignInWithGoogleUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.auth.usecase.SignUpUseCase
+import com.nicholssoftware.jonslearningappandroid.domain.network.NavigationConstants
 import com.nicholssoftware.jonslearningappandroid.ui.BaseViewModel
 import com.nicholssoftware.jonslearningappandroid.util.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel

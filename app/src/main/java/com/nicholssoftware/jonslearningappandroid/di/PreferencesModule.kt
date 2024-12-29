@@ -2,7 +2,7 @@ package com.nicholssoftware.jonslearningappandroid.di
 
 import android.content.Context
 import com.nicholssoftware.jonslearningappandroid.data.cache.preferences.PreferencesDataSourceImpl
-import com.nicholssoftware.jonslearningappandroid.domain.preferences.PreferencesDataSource
+import com.nicholssoftware.jonslearningappandroid.domain.preferences.repository.PreferencesDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
