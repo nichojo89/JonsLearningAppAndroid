@@ -156,9 +156,12 @@ class SignInViewModel @Inject constructor(
 
     private fun navigateToDashboard(navController: NavController?){
         navController?.let {
-            it.navigate(NavigationConstants.DASHBOARD){
-                popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
+            it.navigate(NavigationConstants.CHARACTER_GENERATION){
+                popUpTo(NavigationConstants.CHARACTER_GENERATION) { inclusive = true }
             }
+//            it.navigate(NavigationConstants.DASHBOARD){
+//                popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
+//            }
         }
     }
 }

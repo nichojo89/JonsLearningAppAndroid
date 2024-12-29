@@ -93,7 +93,8 @@ class SignUpViewModel @Inject constructor(
             if(route == NavigationConstants.SIGNUP){
                 signInWithGoogleUseCase(account, true ){success ->
                     if (success) {
-                        updateNavigationEvent(NavigationConstants.DASHBOARD)
+                        updateNavigationEvent(NavigationConstants.CHARACTER_GENERATION)
+//                        updateNavigationEvent(NavigationConstants.DASHBOARD)
                     } else {
                         _passwordErrorMessage.value = "Google sign-up failed"
                     }
