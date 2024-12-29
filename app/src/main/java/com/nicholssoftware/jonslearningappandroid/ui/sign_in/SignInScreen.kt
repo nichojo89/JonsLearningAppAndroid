@@ -103,8 +103,11 @@ fun SignInScreen(
     val userSignedIn = userCanSignIn.collectAsState()
     LaunchedEffect(userSignedIn.value) {
        if(userSignedIn.value == true) {
-           navController.navigate(NavigationConstants.DASHBOARD){
-               popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
+//           navController.navigate(NavigationConstants.DASHBOARD){
+//               popUpTo(NavigationConstants.DASHBOARD) { inclusive = true }
+//           }
+           navController.navigate(NavigationConstants.CHARACTER_GENERATION){
+               popUpTo(NavigationConstants.CHARACTER_GENERATION) { inclusive = true }
            }
        }
     }

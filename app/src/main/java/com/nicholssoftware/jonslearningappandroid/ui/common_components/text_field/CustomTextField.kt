@@ -38,7 +38,7 @@ fun CustomTextField(
     Column {
         OutlinedTextField(
             value = value,
-            modifier = modifier,
+            modifier = modifier.size(AppTextInputIconSize),
             colors = AppTextInputColors,
             onValueChange = onValueChange,
             shape = RoundedCornerShape(50.dp),

@@ -7,5 +7,6 @@ enum class FontAwesomeIcon(val unicode: String) {
      SEARCH("\uf002"),
     EYE("\uf06e"),
     EYESLASH("\uf070"),
-    LOCK("\uf2b5")
+    LOCK("\uf2b5"),
+    CAMERA("\uf030")
 }

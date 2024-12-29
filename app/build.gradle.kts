@@ -73,6 +73,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
     implementation("com.airbnb.android:lottie-compose:6.0.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.6")
+    implementation("io.coil-kt:coil-compose:2.3.0")
 }
 kapt {
     correctErrorTypes = true

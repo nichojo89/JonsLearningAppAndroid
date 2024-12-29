@@ -26,7 +26,8 @@ private const val tweenSpeed = 300
 fun AppNavigation(
     navController: NavHostController,
     requestSignInWithGoogle: () -> Unit,
-    signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit
+    takePicture: (newImplementation: () -> Unit) -> Unit = {},
+    signIntoGoogle: (newImplementation: (GoogleSignInAccount) -> Unit) -> Unit,
 ) {
     NavHost(navController = navController, startDestination = NavigationConstants.SIGN_IN) {
         composable(NavigationConstants.SIGN_IN,
@@ -127,7 +128,16 @@ fun AppNavigation(
                 characterGeneratorViewModel.title,
                 characterGeneratorViewModel.generateCharacterEnabled,
                 characterGeneratorViewModel::updatePrompt,
-                characterGeneratorViewModel::generateCharacter
+                characterGeneratorViewModel::generateCharacter,
+                characterGeneratorViewModel.isSelectImage,
+                characterGeneratorViewModel.selectedImageUri,
+                characterGeneratorViewModel.isImageSet,
+                characterGeneratorViewModel::updateSelectImage,
+                characterGeneratorViewModel::updateSelectedImageUri,
+                characterGeneratorViewModel::handleTakePictureResult,
+                characterGeneratorViewModel::createImageFile,
+                takePicture,
+                characterGeneratorViewModel::updateIsImageSet
             )
         }
     }
