@@ -141,7 +141,10 @@ fun AppNavigation(
                 characterGeneratorViewModel::handleTakePictureResult,
                 characterGeneratorViewModel::createImageFile,
                 takePicture,
-                characterGeneratorViewModel::updateIsImageSet
+                characterGeneratorViewModel::updateIsImageSet,
+                characterGeneratorViewModel.generatedImage,
+                characterGeneratorViewModel.isGeneratedImage,
+                characterGeneratorViewModel::updateIsGeneratedImage
             )
         }
     }

@@ -55,7 +55,10 @@ fun CharacterGeneratorScreen(
     handleTakePictureResult: (isSuccess: Boolean) -> Unit,
     createImageFile: () -> Uri?,
     takePicture: (newImplementation: () -> Unit) -> Unit = {},
-    updateIsImageSet: (isImageSet: Boolean) -> Unit = {}
+    updateIsImageSet: (isImageSet: Boolean) -> Unit = {},
+    generatedImage: State<String>,
+    isGeneratedImage : State<Boolean>,
+    updateIsGeneratedImage: (Boolean) -> Unit
 ) {
     val context = LocalContext.current
     val takePictureLauncher = rememberLauncherForActivityResult(
@@ -77,6 +80,7 @@ fun CharacterGeneratorScreen(
             updateSelectedImageUri.invoke(uri)
             updateSelectImage.invoke(false)
             updateIsImageSet(true)
+            updateIsGeneratedImage(false)
         }
     )
     Scaffold(
@@ -111,7 +115,10 @@ fun CharacterGeneratorScreen(
                             },
                             width,
                             selectedImageUri.value,
-                            isImageSet.value
+                            isImageSet.value,
+                            generatedImage.value,
+                            isGeneratedImage.value,
+                            context,
                         )
                         Text("Select an image to base your character from",
                             fontSize = 16.sp,
@@ -230,6 +237,7 @@ fun CharacterGeneratorScreen(
     )
 }
 
+
 @Preview
 @Composable
 fun CharacterGeneratorScreenPreview() {
@@ -239,6 +247,8 @@ fun CharacterGeneratorScreenPreview() {
     val isImageSelected = remember {mutableStateOf(false)}
     val selectedImageUri = remember {mutableStateOf<Uri?>(null)}
     val isImageSet = remember {mutableStateOf(false)}
+    val generateImage = remember { mutableStateOf("") }
+    val isGeneratedImage = remember { mutableStateOf(false) }
     val updatePrompt: (String) -> Unit = { }
     val generateCharacter: () -> Unit = { }
     val updateSelectImage: (Boolean) -> Unit = { }
@@ -247,6 +257,7 @@ fun CharacterGeneratorScreenPreview() {
     val createImageFile: () -> Uri? = { null }
     val takePicture: (newImplementation: () -> Unit) -> Unit = { }
     val updateIsImageSet: (Boolean) -> Unit = { }
+    val updateIsGeneratedImage: (Boolean) -> Unit = {}
 
     CharacterGeneratorScreen(
         prompt = promptState,
@@ -262,6 +273,9 @@ fun CharacterGeneratorScreenPreview() {
         handleTakePictureResult = handleTakePictureResult,
         createImageFile = createImageFile,
         takePicture = takePicture,
-        updateIsImageSet = updateIsImageSet
+        updateIsImageSet = updateIsImageSet,
+        generatedImage = generateImage,
+        isGeneratedImage = isGeneratedImage,
+        updateIsGeneratedImage = updateIsGeneratedImage
     )
 }

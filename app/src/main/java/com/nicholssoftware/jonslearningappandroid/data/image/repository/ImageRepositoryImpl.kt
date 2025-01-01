@@ -2,9 +2,7 @@ package com.nicholssoftware.jonslearningappandroid.data.image.repository
 
 import android.content.Context
 import android.net.Uri
-import android.util.Base64
 import com.nicholssoftware.jonslearningappandroid.data.network.ApiService
-import com.nicholssoftware.jonslearningappandroid.domain.generate_character.model.GenerateCharacterRequest
 import com.nicholssoftware.jonslearningappandroid.domain.generate_character.model.GenerateCharacterResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -44,33 +42,19 @@ class ImageRepositoryImpl @Inject constructor(
 
     override suspend fun sendImageToApi(image: File?, prompt: String): Result<GenerateCharacterResponse> {
         return try {
-            val base64Image = image?.let {
-                val bytes = it.readBytes()
-                // Add the base64 prefix that many APIs expect
-                "data:image/jpeg;base64," + Base64.encodeToString(bytes, Base64.NO_WRAP)
-            }
-
-            val request = GenerateCharacterRequest(
-                image = base64Image?.take(400),
-                prompt = prompt
+            val multiPartImage = MultipartBody.Part.createFormData("image", image?.name, image?.asRequestBody()!!)
+            val requestBodyPrompt = prompt.toRequestBody("text/plain".toMediaTypeOrNull())
+            val response = apiService.GenerateCharacter(
+                multiPartImage,
+                requestBodyPrompt
             )
-
-            // Debug logging
-//            Log.d("API_DEBUG", "Sending request: $request")
-
-            val response = apiService.GenerateCharacter(request)
-//            Log.d("API_DEBUG", "Response code: ${response.code()}")
-
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
-                // Log the error body
                 val errorBody = response.errorBody()?.string()
-//                Log.e("API_DEBUG", "Error body: $errorBody")
                 Result.failure(Exception("Error: ${response.code()} - $errorBody"))
             }
         } catch (e: Exception) {
-//            Log.e("API_DEBUG", "Exception", e)
             Result.failure(e)
         }
     }

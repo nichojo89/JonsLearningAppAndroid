@@ -1,8 +1,13 @@
 package com.nicholssoftware.jonslearningappandroid.ui.common_components.image
 
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -31,13 +37,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Composable
 fun ImageUploader(
     modifier: Modifier,
     maxWidth: Dp,
     imageUri: Uri?,
-    isImageSet: Boolean
+    isImageSet: Boolean,
+    generatedImage: String?,
+    isGeneratedImage: Boolean,
+    @ApplicationContext context: Context
 ) {
     val width = remember {maxWidth.value.div(1.5)  }
     val height = remember { width.times(1.33) }
@@ -58,22 +68,42 @@ fun ImageUploader(
 
     ) {
         if (showImage) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUri)
-                    .crossfade(true)
-                    .listener(
-                        onStart = { Log.d("AsyncImage", "Loading started for $imageUri") },
-                        onSuccess = { _, _ -> Log.d("AsyncImage", "Image loaded successfully") },
-                        onError = { _, throwable -> Log.e("AsyncImage", "Error loading image") }
+            if(generatedImage?.isNotEmpty() == true && isGeneratedImage){
+                val byteArray = Base64.decode(generatedImage.toString(), Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                val imageBitmap = bitmap?.asImageBitmap()
+
+                if (imageBitmap != null) {
+                    Image(
+                        bitmap = imageBitmap,
+                        contentDescription = "Base64 Encoded Image",
+                        contentScale = ContentScale.FillHeight,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(16.dp))
                     )
-                    .build(),
-                contentScale = ContentScale.FillHeight,
-                contentDescription = "Captured Image",
-                modifier = Modifier.fillMaxHeight()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(16.dp))
-            )
+                } else {
+                    Toast.makeText(context, "Failed to parse gen image", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageUri)
+                        .crossfade(true)
+                        .listener(
+                            onStart = { Log.d("AsyncImage", "Loading started for $imageUri") },
+                            onSuccess = { _, _ -> Log.d("AsyncImage", "Image loaded successfully") },
+                            onError = { _, throwable -> Log.e("AsyncImage", "Error loading image") }
+                        )
+                        .build(),
+                    contentScale = ContentScale.FillHeight,
+                    contentDescription = "Captured Image",
+                    modifier = Modifier.fillMaxHeight()
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                )
+            }
         } else {
             Canvas(
                 modifier = Modifier.matchParentSize()
@@ -114,10 +144,14 @@ fun PreviewImageUploader() {
     // Create a mock image set scenario for preview
     val isImageSet =  false
 
+    val context = LocalContext.current
     ImageUploader(
         modifier = Modifier.padding(16.dp),
         maxWidth = maxWidth,
         imageUri = mockUri,
-        isImageSet = isImageSet
+        isImageSet = isImageSet,
+        generatedImage = null,
+        isGeneratedImage = false,
+        context
     )
 }

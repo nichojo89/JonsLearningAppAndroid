@@ -6,6 +6,7 @@ import okhttp3.RequestBody
 import retrofit2.http.Part
 
 data class GenerateCharacterRequest(
-    @SerializedName("image") val image: String?,
+//     image
+    @SerializedName("image") @Part val image: MultipartBody.Part?,
     @SerializedName("prompt") val prompt: String?
 )

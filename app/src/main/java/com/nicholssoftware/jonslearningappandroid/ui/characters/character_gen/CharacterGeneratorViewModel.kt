@@ -40,6 +40,12 @@ class CharacterGeneratorViewModel @Inject constructor(
     private val _generateCharacterEnabled = mutableStateOf(false)
     val generateCharacterEnabled: State<Boolean> = _generateCharacterEnabled
 
+    private val _generatedImage = mutableStateOf("")
+    val generatedImage : State<String> = _generatedImage
+
+    private val _isGeneratedImage = mutableStateOf(false)
+    val isGeneratedImage : State<Boolean> = _isGeneratedImage
+
     fun updatePrompt(prompt: String){
         _prompt.value = prompt
         updateGenerateCharacterEnabled()
@@ -61,12 +67,17 @@ class CharacterGeneratorViewModel @Inject constructor(
         _isImageSet.value = isImageSet
     }
 
+    fun updateIsGeneratedImage(isGeneratedImage: Boolean){
+        _isGeneratedImage.value = isGeneratedImage
+    }
+
     fun handleTakePictureResult(isSuccess: Boolean) {
         if (isSuccess) {
             _selectedImageUri.value?.let {
                 try {
                     context.contentResolver.openInputStream(it)?.use {
                         updateIsImageSet(true)
+                        _isGeneratedImage.value = false
                     } ?: run {
                         updateSelectedImageUri(null)
                         showToast("Image file not found after capture")
@@ -109,7 +120,12 @@ class CharacterGeneratorViewModel @Inject constructor(
         if(_generateCharacterEnabled.value){
             viewModelScope.launch {
                 val response = generateCharacterUseCase.invoke(_selectedImageUri.value, _prompt.value)
-                print(response)
+                if(response.isSuccess){
+                   response.getOrNull()?.images?.first()?.let {
+                       _generatedImage.value = it
+                       _isGeneratedImage.value = true
+                   }
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.nicholssoftware.jonslearningappandroid.data.network.intercepters
 
-import com.nicholssoftware.jonslearningappandroid.domain.auth.repository.Authenticator
 import com.nicholssoftware.jonslearningappandroid.domain.auth.repository.FirebaseAuthenticator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
